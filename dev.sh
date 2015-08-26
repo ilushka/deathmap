@@ -9,8 +9,18 @@ function heroku_commands() {
 }
 
 function git_push() {
-    git commit -m $@
+    if [[ "${1}_" == "_" ]]; then
+        printf "Missing commit message\n"
+        exit 1
+    fi
+    git add .
+    git commit -m "$@"
     git push
+}
+
+function status() {
+    git status
+    heroku ps   
 }
 
 case $1 in
@@ -19,6 +29,9 @@ case $1 in
         ;;
     "push")
         git_push "${@:2}"
+        ;;
+    "status")
+        status
         ;;
 esac
 
