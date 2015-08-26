@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style type="text/css">
+      html, body { height: 100%; margin: 0; padding: 0; }
+      #map { height: 100%; }
+    </style>
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="{{ url_for('bower.static', filename='jquery/dist/jquery.min.js') }}"></script>
+  </head>
+  <body>
+    <div id="map"></div>
+    <script type="text/javascript">
+
+var map;
+function initMap() {
+  var myLatLng = {lat: 37.375476, lng: -121.822275};
+
+  map = new google.maps.Map(document.getElementById('map'), {
+    center: myLatLng,
+    zoom: 9
+  });
+
+  $.ajax({url: "/data"})
+    .done(function(crashes) {
+      console.log(crashes);
+      for (ii = 0; ii < crashes.data.length; ++ii) {
+        var crash = crashes.data[ii];
+        var marker = new google.maps.Marker({
+          position: crash.location,
+          map: map,
+          title: crash.people[0].name
+        });
+      }
+    });
+
+/*
+  var marker = new google.maps.Marker({
+    position: myLatLng,
+    map: map,
+    title: 'Hello World!'
+  });
+*/
+}
+
+    </script>
+    <script async defer
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCNR_PQxoUtbFLRaLGV3NNZIq7sjqKojYA&callback=initMap">
+    </script>
+  </body>
+</html>
