@@ -23,6 +23,11 @@ function status() {
     heroku ps   
 }
 
+function start_local() {
+    DATABASE_URL="postgresql://deathmap:password@localhost/deathmap" \
+        python deathmap.py
+}
+
 case $1 in
     "heroku")
         heroku_commands "${@:2}"
@@ -32,6 +37,9 @@ case $1 in
         ;;
     "status")
         status
+        ;;
+    "start")
+        start_local
         ;;
 esac
 

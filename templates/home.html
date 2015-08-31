@@ -24,12 +24,12 @@ function initMap() {
   $.ajax({url: "/data"})
     .done(function(crashes) {
       console.log(crashes);
-      for (ii = 0; ii < crashes.data.length; ++ii) {
-        var crash = crashes.data[ii];
+      for (ii = 0; ii < crashes.length; ++ii) {
+        var crash = crashes[ii];
         var marker = new google.maps.Marker({
-          position: crash.location,
+          position: { lat: crash.latitude, lng: crash.longitude },
           map: map,
-          title: crash.people[0].name
+          title: crash.victims[0].first
         });
       }
     });

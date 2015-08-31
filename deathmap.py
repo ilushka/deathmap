@@ -1,8 +1,102 @@
-from flask import Flask, render_template, jsonify
+from flask import Flask, render_template, jsonify, Response
 from flask.ext.bower import Bower
+from flask.ext.sqlalchemy import SQLAlchemy
+import json
+import os
+
 app = Flask(__name__)
 app.debug = True
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 Bower(app)
+db = SQLAlchemy(app)
+
+class CrashEncoder(json.JSONEncoder):
+  def default(self, obj):
+    crash = {}
+    crash['victims'] = []
+    for v in obj.victims:
+      crash['victims'].append({
+        "first": v.first,
+        "last": v.last,
+        "age": v.age
+      })
+    crash['tags'] = []
+    for t in obj.tags:
+      crash['tags'].append(t.name)
+    crash['links'] = []
+    for l in obj.links:
+      crash['links'].append({
+        "name": l.name,
+        "link": l.link
+      })
+    crash['date'] = obj.date.isoformat()
+    crash['latitude'] = obj.latitude
+    crash['longitude'] = obj.longitude
+    return crash
+
+class Crash(db.Model):
+  __tablename__ = "crashes"
+
+  id = db.Column(db.Integer, primary_key=True)
+  date = db.Column(db.DateTime, unique=True)
+  latitude = db.Column(db.Float, unique=True)
+  longitude = db.Column(db.Float, unique=True)
+  victims = db.relationship("Victim", backref="crashes")
+  links = db.relationship("Link", backref="crashes")
+  tags = db.relationship("Tag")
+
+  def __init__(self, datetime, latitude, longitude):
+    self.date = datetime
+    self.latitude = latitude
+    self.longitude = longitude
+
+  def __repr__(self):
+    return '<Crash %s %f %f>' % (self.date, self.latitude, self.longitude)
+
+class Victim(db.Model):
+  __tablename__ = "victims"
+
+  id = db.Column(db.Integer, primary_key=True)
+  first = db.Column(db.String(64))
+  last = db.Column(db.String(64))
+  age = db.Column(db.Integer, unique=True)
+  crash_id = db.Column(db.Integer, db.ForeignKey('crashes.id'))
+
+  def __init__(self, first, last, age):
+    self.first = first
+    self.last = last
+    self.age = age
+
+  def __repr__(self):
+    return '<Victim %s %s %d>' % (self.first, self.last, self.age)
+
+class Link(db.Model):
+  __tablename__ = "links"
+
+  id = db.Column(db.Integer, primary_key=True)
+  name = db.Column(db.String(256))
+  link = db.Column(db.String(512))
+  crash_id = db.Column(db.Integer, db.ForeignKey('crashes.id'))
+
+  def __init__(self, name, link):
+    self.name = name
+    self.link = link
+
+  def __repr__(self):
+    return '<Link %s %s>' % (self.name, self.link)
+
+class Tag(db.Model):
+  __tablename__ = "tags"
+
+  id = db.Column(db.Integer, primary_key=True)
+  name = db.Column(db.String(64))
+  crash_id = db.Column(db.Integer, db.ForeignKey('crashes.id'))
+
+  def __init__(self, name):
+    self.name = name
+
+  def __repr__(self):
+    return '<Tag %s>' % (self.name)
 
 @app.route("/")
 def home():
@@ -10,169 +104,9 @@ def home():
 
 @app.route("/data")
 def data():
-  data = {
-    "data": [{
-      "people": [{
-        "name": "john doe",
-        "age": 60
-      }],
-      "date": "2015-08-23T6:14:00",
-      "location" : {
-        "lat": 37.338987,
-        "lng": -121.842101
-      }, 
-      "tags": ["hitnrun", "pedestrian"],
-      "links": [
-        {
-          "title": "MercuryNews",
-          "link": "http://www.mercurynews.com/news/ci_28688998/hitandrun-kills-pedestrian-in-san-jose"
-        }
-      ]
-    },
-    {
-      "people": [{
-        "name": "jane doe",
-        "age": 34
-      }],
-      "date": "2015-08-22T23:51:00",
-      "location" : {
-        "lat": 37.310316,
-        "lng": -121.823451
-      }, 
-      "tags": ["solo", "auto"],
-      "links": [
-        {
-          "title": "MercuryNews",
-          "link": "http://www.mercurynews.com/news/ci_28688906/san-jose:-woman-dies-in-us101-crash"
-        }
-      ]
-    },
-    {
-      "people": [{
-        "name": "Stephanie Lopez",
-        "age": 30
-      }],
-      "date": "2015-08-13T00:00:00",
-      "location" : {
-        "lat": 37.372225,
-        "lng": -121.850161
-      }, 
-      "tags": ["passenger"],
-      "links": [
-        {
-          "title": "MercuryNews",
-          "link": "http://www.mercurynews.com/news/ci_28659216/san-jose:-woman-killed-in-highway-101-crash-identified?source=infinite"
-        }
-      ]
-    },
-    {
-      "people": [{
-        "name": "Jane Doe",
-        "age": 50
-      }],
-      "date": "2015-08-16T00:00:00",
-      "location" : {
-        "lat": 37.998256,
-        "lng": -121.810995
-      }, 
-      "tags": ["pedestrian"],
-      "links": [
-        {
-          "title": "MercuryNews",
-          "link": "http://www.mercurynews.com/news/ci_28651148/antioch:-woman-killed-on-highway-4"
-        }
-      ]
-    },
-    {
-      "people": [{
-        "name": "Rachel Shahinian",
-        "age": 50,
-        "name": "Annika Zinsley",
-        "age": 10,
-        "name": "Shelia Weeks",
-        "age": 59
-      }],
-      "date": "2015-08-15T16:05:00",
-      "location" : {
-        "lat": 37.839117,
-        "lng": -120.626032
-      }, 
-      "tags": ["auto"],
-      "links": [
-        {
-          "title": "MercuryNews",
-          "link": "http://www.mercurynews.com/news/ci_28680985/chp:-alameda-woman-and-daughter-10-killed-in-traffic-collision"
-        },
-        {
-          "title": "ABC 10 News",
-          "link": "http://www.news10.net/story/news/2015/08/15/car-accident--tuolumne-county-sparks-wildfire/31801717/"
-        }
-      ]
-    },
-    {
-      "people": [{
-        "name": "Steven Mi",
-        "age": 31
-      }],
-      "date": "2015-08-14T18:25:00",
-      "location" : {
-        "lat": 37.592398,
-        "lng": -121.886151
-      }, 
-      "tags": ["bicycle", "auto"],
-      "links": [
-        {
-          "title": "MercuryNews",
-          "link": "http://www.mercurynews.com/news/ci_28672816/fremont-bicyclist-struck-killed-on-highway-84"
-        }
-      ]
-    },
-    {
-      "people": [{
-        "name": "Reginald Florence",
-        "age": 37
-      }],
-      "date": "2015-08-14T10:16:00",
-      "location" : {
-        "lat": 37.769194,
-        "lng": -122.218955
-      }, 
-      "tags": ["amtrak", "train", "pedestrian"],
-      "links": [
-        {
-          "title": "MercuryNews",
-          "link": "http://www.mercurynews.com/news/ci_28668479/oakland:-authorities-id-man-fatally-hit-by-train"
-        }
-      ]
-    },
-    {
-      "people": [{
-        "name": "Marilyn Ortega",
-        "age": 23,
-        "name": "Angel Armijo",
-        "age": 24,
-        "name": "John Doe",
-        "age": 26
-      }],
-      "date": "2015-08-16T22:00:00",
-      "location" : {
-        "lat": 37.948737,
-        "lng": -122.268848
-      }, 
-      "tags": ["auto"],
-      "links": [
-        {
-          "title": "The Richmand Standard",
-          "link": "http://richmondstandard.com/2015/08/online-fundraisers-started-for-victims-of-san-pablo-dam-road-crash/"
-        },
-        {
-          "title": "Pleasant Hill Patch",
-          "link": "http://patch.com/california/pleasanthill/man-28-arrested-contra-costa-co-crash-killed-3"
-        }
-      ]
-    }]
-  };
-  return jsonify(**data)
+  return Response(response=json.dumps(Crash.query.all(), cls=CrashEncoder),
+                  status=200,
+                  mimetype="application/json")
 
 if __name__ == "__main__":
   app.run()
