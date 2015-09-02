@@ -1,4 +1,4 @@
-from flask import Flask, render_template, jsonify, Response
+from flask import Flask, render_template, jsonify, Response, request
 from flask.ext.bower import Bower
 from flask.ext.sqlalchemy import SQLAlchemy
 import json
@@ -102,11 +102,18 @@ class Tag(db.Model):
 def home():
   return render_template("home.html")
 
-@app.route("/data")
-def data():
-  return Response(response=json.dumps(Crash.query.all(), cls=CrashEncoder),
-                  status=200,
-                  mimetype="application/json")
+@app.route("/crash", strict_slashes=False)
+@app.route("/crash/<crash_id>")
+def crash(crash_id=None):
+  if str(crash_id) == "all" or crash_id == None:
+    return Response(response=json.dumps(Crash.query.all(), cls=CrashEncoder),
+                    status=200,
+                    mimetype="application/json")
+
+@app.route("/add", methods=["POST", "GET"])
+def add():
+  if request.method == "GET":
+    return render_template("add.html")
 
 if __name__ == "__main__":
   app.run()
