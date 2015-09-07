@@ -1,180 +1,162 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title>Add Crash</title>
+{% extends "base.html" %}
 
-    <!-- Bootstrap -->
-    <link href="{{ url_for('bower.static', filename='bootstrap/dist/css/bootstrap.min.css') }}" rel="stylesheet">
+{% block head %}
+  <style type="text/css">
+    body {
+      padding: 20px 20px;
+    }
+  </style>
 
-    <style type="text/css">
-      body {
-        padding: 20px 20px;
-      }
-    </style>
+  <title>Add crash</title>
+{% endblock %}
 
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
-  </head>
-
-  <body>
-    <div style="width:500px;">
-      <form id="crash-form" class="form-horizontal">
-        <!-- Victim -->
-        <div id="victims-container">
-          <div class="panel panel-default victim-form-group">
-            <div class="panel-heading">
-              <h3 class="panel-title">Victim</h3>
-            </div>
-            <div class="panel-body">
-              <!-- First name -->
-              <div class="form-group form-group-lg">
-                <div class="col-sm-12">
-                  <input type="text" class="form-control firstname-input" placeholder="First Name" value="monkey">
-                </div>
-              </div>
-              <!-- Last name -->
-              <div class="form-group form-group-lg">
-                <div class="col-sm-12">
-                  <input type="text" class="form-control lastname-input" placeholder="Last Name" value="donkey">
-                </div>
-              </div>
-              <!-- Age -->
-              <div class="form-group form-group-lg">
-                <div class="col-sm-12">
-                  <input type="number" class="form-control age-input" placeholder="Age" value="666">
-                </div>
-              </div>
-              <!-- Victim delete button -->
-              <div class="form-group form-group-lg">
-                <div class="col-sm-offset-10 col-sm-2">
-                  <button type="submit" class="btn btn-danger btn-xs del-victim-btn">Delete</button>
-                </div>
-              </div>
-            </div><!-- div class="panel-body" -->
-          </div><!-- div class="panel panel-default victim-form-group" -->
-        </div><!-- div id="victims-container" -->
-        <!-- Victim add button -->
-        <div class="form-group form-group-lg">
-          <div class="col-sm-1">
-            <button id="add-victim-btn" type="submit" class="btn btn-primary btn-xs">Add Victim</button>
-          </div>
-        </div>
-
-        <!-- Tags -->
-        <div id="tags-container">
-          <div class="panel panel-default tag-form-group">
-            <div class="panel-heading">
-              <h3 class="panel-title">Tag</h3>
-            </div>
-            <div class="panel-body">
-              <!-- Tag name input -->
-              <div class="form-group form-group-lg">
-                <div class="col-sm-12">
-                  <input type="text" class="form-control tag-input" placeholder="Tag" value="test">
-                </div>
-              </div>
-              <!-- Tag delete button -->
-              <div class="form-group form-group-lg">
-                <div class="col-sm-offset-10 col-sm-2">
-                  <button type="submit" class="btn btn-danger btn-xs del-tag-btn">Delete</button>
-                </div>
-              </div>
-            </div><!-- div class="panel-body" -->
-          </div><!-- div class="panel panel-default tag-form-group" -->
-        </div><!-- div id="tags-container" -->
-        <!-- Tag add button -->
-        <div class="form-group form-group-lg">
-          <div class="col-sm-1">
-            <button id="add-tag-btn" type="submit" class="btn btn-primary btn-xs">Add Tag</button>
-          </div>
-        </div>
-
-        <!-- Links -->
-        <div id="links-container">
-          <div class="panel panel-default link-form-group">
-            <div class="panel-heading">
-              <h3 class="panel-title">Link</h3>
-            </div>
-            <div class="panel-body">
-              <!-- Link name input -->
-              <div class="form-group form-group-lg">
-                <div class="col-sm-12">
-                  <input type="text" class="form-control link-name-input" placeholder="Name" value="google">
-                </div>
-              </div>
-              <!-- Link address input -->
-              <div class="form-group form-group-lg">
-                <div class="col-sm-12">
-                  <input type="text" class="form-control link-input" placeholder="Link" value="google.com">
-                </div>
-              </div>
-              <!-- Link delete button -->
-              <div class="form-group form-group-lg">
-                <div class="col-sm-offset-10 col-sm-2">
-                  <button type="submit" class="btn btn-danger btn-xs del-link-btn">Delete</button>
-                </div>
-              </div>
-            </div><!-- div class="panel-body" -->
-          </div><!-- div class="panel panel-default link-form-group" -->
-        </div><!-- div id="links-container" -->
-        <!-- Link add button -->
-        <div class="form-group form-group-lg">
-          <div class="col-sm-1">
-            <button id="add-link-btn" type="submit" class="btn btn-primary btn-xs">Add Link</button>
-          </div>
-        </div>
-
-        <!-- Date, Latitude, and Longitude -->
-        <div class="panel panel-default">
+{% block body %}
+  <div style="width:500px;">
+    <form id="crash-form" class="form-horizontal">
+      <!-- Victim -->
+      <div id="victims-container">
+        <div class="panel panel-default victim-form-group">
           <div class="panel-heading">
-            <h3 class="panel-title">Crash Info</h3>
+            <h3 class="panel-title">Victim</h3>
           </div>
           <div class="panel-body">
+            <!-- First name -->
             <div class="form-group form-group-lg">
-              <label for="date-input" class="col-sm-2 control-label">Date</label>
-              <div class="col-sm-10">
-                <input type="datetime-local" class="form-control" id="date-input" placeholder="Date" value="2001-01-01T01:01:01.001">
+              <div class="col-sm-12">
+                <input type="text" class="form-control firstname-input" placeholder="First Name" value="monkey">
               </div>
             </div>
+            <!-- Last name -->
             <div class="form-group form-group-lg">
-              <label for="latitude-input" class="col-sm-2 control-label">Latitude</label>
-              <div class="col-sm-10">
-                <input type="number" class="form-control" id="latitude-input" placeholder="Latitude" value="37.3588605">
+              <div class="col-sm-12">
+                <input type="text" class="form-control lastname-input" placeholder="Last Name" value="donkey">
               </div>
             </div>
+            <!-- Age -->
             <div class="form-group form-group-lg">
-              <label for="longitude-input" class="col-sm-2 control-label">Longitude</label>
-              <div class="col-sm-10">
-                <input type="number" class="form-control" id="longitude-input" placeholder="Longitude" value="-122.0322778">
+              <div class="col-sm-12">
+                <input type="number" class="form-control age-input" placeholder="Age" value="666">
+              </div>
+            </div>
+            <!-- Victim delete button -->
+            <div class="form-group form-group-lg">
+              <div class="col-sm-offset-10 col-sm-2">
+                <button type="submit" class="btn btn-danger btn-xs del-victim-btn">Delete</button>
               </div>
             </div>
           </div><!-- div class="panel-body" -->
-        </div><!-- div class="panel panel-default" -->
-
-        <!-- Create button -->
-        <div class="form-group form-group-lg">
-          <div class="col-sm-2">
-            <button id="create-crash-btn" type="submit" class="btn btn-primary btn-lg">Create</button>
-          </div>
+        </div><!-- div class="panel panel-default victim-form-group" -->
+      </div><!-- div id="victims-container" -->
+      <!-- Victim add button -->
+      <div class="form-group form-group-lg">
+        <div class="col-sm-1">
+          <button id="add-victim-btn" type="submit" class="btn btn-primary btn-xs">Add Victim</button>
         </div>
-      </form>
-    </div>
+      </div>
 
+      <!-- Tags -->
+      <div id="tags-container">
+        <div class="panel panel-default tag-form-group">
+          <div class="panel-heading">
+            <h3 class="panel-title">Tag</h3>
+          </div>
+          <div class="panel-body">
+            <!-- Tag name input -->
+            <div class="form-group form-group-lg">
+              <div class="col-sm-12">
+                <input type="text" class="form-control tag-input" placeholder="Tag" value="test">
+              </div>
+            </div>
+            <!-- Tag delete button -->
+            <div class="form-group form-group-lg">
+              <div class="col-sm-offset-10 col-sm-2">
+                <button type="submit" class="btn btn-danger btn-xs del-tag-btn">Delete</button>
+              </div>
+            </div>
+          </div><!-- div class="panel-body" -->
+        </div><!-- div class="panel panel-default tag-form-group" -->
+      </div><!-- div id="tags-container" -->
+      <!-- Tag add button -->
+      <div class="form-group form-group-lg">
+        <div class="col-sm-1">
+          <button id="add-tag-btn" type="submit" class="btn btn-primary btn-xs">Add Tag</button>
+        </div>
+      </div>
 
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="{{ url_for('bower.static', filename='jquery/dist/jquery.min.js') }}"></script>
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="{{ url_for('bower.static', filename='bootstrap/dist/js/bootstrap.min.js') }}"></script>
+      <!-- Links -->
+      <div id="links-container">
+        <div class="panel panel-default link-form-group">
+          <div class="panel-heading">
+            <h3 class="panel-title">Link</h3>
+          </div>
+          <div class="panel-body">
+            <!-- Link name input -->
+            <div class="form-group form-group-lg">
+              <div class="col-sm-12">
+                <input type="text" class="form-control link-name-input" placeholder="Name" value="google">
+              </div>
+            </div>
+            <!-- Link address input -->
+            <div class="form-group form-group-lg">
+              <div class="col-sm-12">
+                <input type="text" class="form-control link-input" placeholder="Link" value="google.com">
+              </div>
+            </div>
+            <!-- Link delete button -->
+            <div class="form-group form-group-lg">
+              <div class="col-sm-offset-10 col-sm-2">
+                <button type="submit" class="btn btn-danger btn-xs del-link-btn">Delete</button>
+              </div>
+            </div>
+          </div><!-- div class="panel-body" -->
+        </div><!-- div class="panel panel-default link-form-group" -->
+      </div><!-- div id="links-container" -->
+      <!-- Link add button -->
+      <div class="form-group form-group-lg">
+        <div class="col-sm-1">
+          <button id="add-link-btn" type="submit" class="btn btn-primary btn-xs">Add Link</button>
+        </div>
+      </div>
 
-    <script type="text/javascript">
+      <!-- Date, Latitude, and Longitude -->
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">Crash Info</h3>
+        </div>
+        <div class="panel-body">
+          <div class="form-group form-group-lg">
+            <label for="date-input" class="col-sm-2 control-label">Date</label>
+            <div class="col-sm-10">
+              <input type="datetime-local" class="form-control" id="date-input" placeholder="Date" value="2001-01-01T01:01:01.001">
+            </div>
+          </div>
+          <div class="form-group form-group-lg">
+            <label for="latitude-input" class="col-sm-2 control-label">Latitude</label>
+            <div class="col-sm-10">
+              <input type="number" class="form-control" id="latitude-input" placeholder="Latitude" value="37.3588605">
+            </div>
+          </div>
+          <div class="form-group form-group-lg">
+            <label for="longitude-input" class="col-sm-2 control-label">Longitude</label>
+            <div class="col-sm-10">
+              <input type="number" class="form-control" id="longitude-input" placeholder="Longitude" value="-122.0322778">
+            </div>
+          </div>
+        </div><!-- div class="panel-body" -->
+      </div><!-- div class="panel panel-default" -->
+
+      <!-- Create button -->
+      <div class="form-group form-group-lg">
+        <div class="col-sm-2">
+          <button id="create-crash-btn" type="submit" class="btn btn-primary btn-lg">Create</button>
+        </div>
+      </div>
+    </form>
+  </div>
+{% endblock %}
+
+{% block javascript %}
+  <script type="text/javascript">
 
 $(document).ready(function () {
   // Victim add & delete buttons:
@@ -255,7 +237,6 @@ $(document).ready(function () {
     });
   });
 });
-    </script>
-  </body>
-</html>
 
+  </script>
+{% endblock %}

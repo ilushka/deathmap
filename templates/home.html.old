@@ -1,19 +1,15 @@
-{% extends "base.html" %}
-
-{% block head %}
-  <style type="text/css">
-    html, body { height: 100%; margin: 0; padding: 0; }
-    #map { height: 100%; }
-  </style>
-  <script src="{{ url_for('bower.static', filename='jquery/dist/jquery.min.js') }}"></script>
-{% endblock %}
-
-{% block body %}
-  <div id="map"></div>
-{% endblock %}
-
-{% block javascript %}
-  <script type="text/javascript">
+<!DOCTYPE html>
+<html>
+  <head>
+    <style type="text/css">
+      html, body { height: 100%; margin: 0; padding: 0; }
+      #map { height: 100%; }
+    </style>
+    <script src="{{ url_for('bower.static', filename='jquery/dist/jquery.min.js') }}"></script>
+  </head>
+  <body>
+    <div id="map"></div>
+    <script type="text/javascript">
 
 var map;
 function initMap() {
@@ -69,9 +65,9 @@ function initMap() {
     });
 }
 
-  </script>
-
-  <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCNR_PQxoUtbFLRaLGV3NNZIq7sjqKojYA&callback=initMap">
-  </script>
-{% endblock %}
+    </script>
+    <script async defer
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCNR_PQxoUtbFLRaLGV3NNZIq7sjqKojYA&callback=initMap">
+    </script>
+  </body>
+</html>
