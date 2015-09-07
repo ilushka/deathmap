@@ -5,10 +5,16 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title>Bootstrap 101 Template</title>
+    <title>Add Crash</title>
 
     <!-- Bootstrap -->
     <link href="{{ url_for('bower.static', filename='bootstrap/dist/css/bootstrap.min.css') }}" rel="stylesheet">
+
+    <style type="text/css">
+      body {
+        padding: 20px 20px;
+      }
+    </style>
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -20,29 +26,29 @@
 
   <body>
     <div>
-      <form class="form-horizontal">
-
+      <form id="crash-form" class="form-horizontal">
         <div id="victims-container">
-          <div class="alert alert-success victim-form-set" style="width:500px;">
-            <!-- "First Name" input -->
+          <!-- Victim -->
+          <div class="alert alert-success victim-form-group" style="width:500px;">
+            <!-- First name -->
             <div class="form-group form-group-lg">
               <div class="col-sm-12">
-                <input type="text" class="form-control firstname-input firstname-input" placeholder="First Name">
+                <input type="text" class="form-control firstname-input" placeholder="First Name" value="monkey">
               </div>
             </div>
-            <!-- "Last Name" input -->
+            <!-- Last name -->
             <div class="form-group form-group-lg">
               <div class="col-sm-12">
-                <input type="text" class="form-control lastname-input" placeholder="Last Name">
+                <input type="text" class="form-control lastname-input" placeholder="Last Name" value="donkey">
               </div>
             </div>
-            <!-- "Age" input -->
+            <!-- Age -->
             <div class="form-group form-group-lg">
               <div class="col-sm-12">
-                <input type="number" class="form-control age-input" placeholder="Age">
+                <input type="number" class="form-control age-input" placeholder="Age" value="666">
               </div>
             </div>
-            <!-- "Delete" button -->
+            <!-- Victim delete button -->
             <div class="form-group form-group-lg">
               <div class="col-sm-offset-10 col-sm-2">
                 <button type="submit" class="btn btn-danger btn-xs del-victim-btn">Delete</button>
@@ -50,41 +56,98 @@
             </div>
           </div>
         </div>
-        <!-- "Add Victim" button -->
+        <!-- Victim add button -->
         <div class="form-group form-group-lg">
           <div class="col-sm-offset-2 col-sm-10">
             <button id="add-victim-btn" type="submit" class="btn btn-primary btn-lg">Add Victim</button>
           </div>
         </div>
 
+        <!-- Date, Latitude, and Longitude -->
         <div class="alert alert-info" style="width:500px;">
           <div class="form-group form-group-lg">
             <label for="date-input" class="col-sm-2 control-label">Date</label>
             <div class="col-sm-10">
-              <input type="datetime-local" class="form-control" id="date-input" placeholder="Date">
+              <input type="datetime-local" class="form-control" id="date-input" placeholder="Date" value="2001-01-01T01:01:01.001">
             </div>
           </div>
           <div class="form-group form-group-lg">
             <label for="latitude-input" class="col-sm-2 control-label">Latitude</label>
             <div class="col-sm-10">
-              <input type="number" class="form-control" id="latitude-input" placeholder="Latitude">
+              <input type="number" class="form-control" id="latitude-input" placeholder="Latitude" value="37.3588605">
             </div>
           </div>
           <div class="form-group form-group-lg">
             <label for="longitude-input" class="col-sm-2 control-label">Longitude</label>
             <div class="col-sm-10">
-              <input type="number" class="form-control" id="longitude-input" placeholder="Longitude">
+              <input type="number" class="form-control" id="longitude-input" placeholder="Longitude" value="-122.0322778">
             </div>
           </div>
         </div>
 
+        <!-- Tags -->
+        <div id="tags-container">
+          <div class="alert alert-warning tag-form-group" style="width:500px;">
+            <!-- Tag name input -->
+            <div class="form-group form-group-lg">
+              <div class="col-sm-12">
+                <input type="text" class="form-control tag-input" placeholder="Tag" value="test">
+              </div>
+            </div>
+            <!-- Tag delete button -->
+            <div class="form-group form-group-lg">
+              <div class="col-sm-offset-10 col-sm-2">
+                <button type="submit" class="btn btn-danger btn-xs del-tag-btn">Delete</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Tag add button -->
         <div class="form-group form-group-lg">
           <div class="col-sm-offset-2 col-sm-10">
-            <button type="submit" class="btn btn-primary btn-lg">Create</button>
+            <button id="add-tag-btn" type="submit" class="btn btn-primary btn-lg">Add Tag</button>
+          </div>
+        </div>
+
+        <!-- Links -->
+        <div id="links-container">
+          <div class="alert alert-danger link-form-group" style="width:500px;">
+            <!-- Link name input -->
+            <div class="form-group form-group-lg">
+              <div class="col-sm-12">
+                <input type="text" class="form-control link-name-input" placeholder="Name" value="google">
+              </div>
+            </div>
+            <!-- Link address input -->
+            <div class="form-group form-group-lg">
+              <div class="col-sm-12">
+                <input type="text" class="form-control link-input" placeholder="Link" value="google.com">
+              </div>
+            </div>
+            <!-- Link delete button -->
+            <div class="form-group form-group-lg">
+              <div class="col-sm-offset-10 col-sm-2">
+                <button type="submit" class="btn btn-danger btn-xs del-link-btn">Delete</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Link add button -->
+        <div class="form-group form-group-lg">
+          <div class="col-sm-offset-2 col-sm-10">
+            <button id="add-link-btn" type="submit" class="btn btn-primary btn-lg">Add Link</button>
+          </div>
+        </div>
+
+        <!-- Create button -->
+        <div class="form-group form-group-lg">
+          <div class="col-sm-offset-2 col-sm-10">
+            <button id="create-crash-btn" type="submit" class="btn btn-primary btn-lg">Create</button>
           </div>
         </div>
       </form>
     </div>
+
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="{{ url_for('bower.static', filename='jquery/dist/jquery.min.js') }}"></script>
@@ -94,14 +157,82 @@
     <script type="text/javascript">
 
 $(document).ready(function () {
+  // Victim add & delete buttons:
   $(".del-victim-btn").click(function (event) {
     event.preventDefault();
-    $(this).parents(".victim-form-set").remove();
+    $(this).parents(".victim-form-group").remove();
   });
-
   $("#add-victim-btn").click(function (event) {
     event.preventDefault();
-    $(".victim-form-set").first().clone(true).appendTo("#victims-container");
+    $(".victim-form-group").first().clone(true).appendTo("#victims-container");
+  });
+
+  // Tag add & delete buttons:
+  $(".del-tag-btn").click(function (event) {
+    event.preventDefault();
+    $(this).parents(".tag-form-group").remove();
+  });
+  $("#add-tag-btn").click(function (event) {
+    event.preventDefault();
+    $(".tag-form-group").first().clone(true).appendTo("#tags-container");
+  });
+
+  // Link add & delete buttons:
+  $(".del-link-btn").click(function (event) {
+    event.preventDefault();
+    $(this).parents(".link-form-group").remove();
+  });
+  $("#add-link-btn").click(function (event) {
+    event.preventDefault();
+    $(".link-form-group").first().clone(true).appendTo("#links-container");
+  });
+
+  // Create button:
+  $("#create-crash-btn").click(function (event) {
+    // Send crash data to server:
+    // - Collect victim(s) data
+    // - Collect tag(s) data
+    // - Collect link(s) data
+    // - Collect rest of crash data
+    // - POST as JSON
+
+    event.preventDefault();
+    var crash = {
+          victims: [],
+          tags: [],
+          links: []
+        };
+
+    $(".victim-form-group").each(function() {
+      crash.victims.push({
+        first: $(this).find(".firstname-input").first().val(),
+        last: $(this).find(".lastname-input").first().val(),
+        age: parseInt($(this).find(".age-input").first().val()),
+      });
+    });
+    $(".tag-form-group").each(function() {
+      crash.tags.push($(this).find(".tag-input").first().val());
+    });
+    $(".link-form-group").each(function() {
+      crash.links.push({
+        name: $(this).find(".link-name-input").first().val(),
+        link: $(this).find(".link-input").first().val()
+      });
+    });
+    crash.date = $("#date-input").first().val();
+    crash.latitude = $("#latitude-input").first().val();
+    crash.longitude = $("#longitude-input").first().val();
+
+    $.ajax({
+      type: "POST",
+      url: "/add",
+      data: JSON.stringify(crash),
+      dataType: "json",
+      contentType: "application/json",
+      success: function() {
+        alert("Sent crash data");
+      }
+    });
   });
 });
     </script>
