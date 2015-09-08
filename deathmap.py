@@ -113,24 +113,28 @@ class Tag(db.Model):
 def home():
   return render_template("home.html")
 
-@app.route("/crash", strict_slashes=False)
+@app.route("/crash/add")
+def add():
+  return render_template("add.html")
+
+@app.route("/crash/all/list")
+def crash_list():
+  return render_template("list.html")
+
 @app.route("/crash/<crash_id>")
 def crash(crash_id=None):
-  if str(crash_id) == "all" or crash_id == None:
+  if str(crash_id) == "all":
     return Response(response=json.dumps(Crash.query.all(), cls=CrashEncoder),
                     status=200,
                     mimetype="application/json")
 
-@app.route("/add", methods=["POST", "GET"])
-def add():
-  if request.method == "GET":
-    return render_template("add.html")
-  elif request.method == "POST":
+@app.route("/crash", methods=["POST"])
+def crash_add():
     crash = CrashDecoder().decode(request.json)
     db.session.add(crash)
     db.session.commit()
     return render_template("add.html")
-    
+
 
 if __name__ == "__main__":
   app.run()
