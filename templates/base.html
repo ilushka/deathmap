@@ -8,6 +8,13 @@
     <!-- Bootstrap -->
     <link href="{{ url_for('bower.static', filename='bootstrap/dist/css/bootstrap.min.css') }}" rel="stylesheet">
 
+    <style type="text/css">
+      body {
+        padding: 20px 20px;
+        padding-top: 70px;
+      }
+    </style>
+
     {% block head %}
     {% endblock %}
 
@@ -20,6 +27,15 @@
   </head>
 
   <body>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="#" class="navbar-brand">roadviolence.org</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse"></div>
+      </div>
+    </nav>
+
     {% block body %}
     {% endblock %}
 

@@ -18,8 +18,14 @@
 var map;
 function initMap() {
   map = new google.maps.Map(document.getElementById("map"), {
-    center: { lat: 37.375476, lng: -121.822275 },
-    zoom: 9
+    center: { lat: 37.5, lng: -122.1 },
+    zoom: 9,
+    panControl: false,
+    zoomControl: false,
+    mapTypeControl: false,
+    scaleControl: false,
+    streetViewControl: false,
+    overviewMapControl: false
   });
 
   var buildInfoWindowContent = function(crash) {

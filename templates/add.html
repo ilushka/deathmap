@@ -1,17 +1,11 @@
 {% extends "base.html" %}
 
 {% block head %}
-  <style type="text/css">
-    body {
-      padding: 20px 20px;
-    }
-  </style>
-
   <title>Add crash</title>
 {% endblock %}
 
 {% block body %}
-  <div style="width:500px;">
+  <div class="container" style="width:500px;">
     <form id="crash-form" class="form-horizontal">
       <!-- Victim -->
       <div id="victims-container">
@@ -23,19 +17,19 @@
             <!-- First name -->
             <div class="form-group form-group-lg">
               <div class="col-sm-12">
-                <input type="text" class="form-control firstname-input" placeholder="First Name" value="monkey">
+                <input type="text" class="form-control firstname-input" placeholder="First Name">
               </div>
             </div>
             <!-- Last name -->
             <div class="form-group form-group-lg">
               <div class="col-sm-12">
-                <input type="text" class="form-control lastname-input" placeholder="Last Name" value="donkey">
+                <input type="text" class="form-control lastname-input" placeholder="Last Name">
               </div>
             </div>
             <!-- Age -->
             <div class="form-group form-group-lg">
               <div class="col-sm-12">
-                <input type="number" class="form-control age-input" placeholder="Age" value="666">
+                <input type="number" class="form-control age-input" placeholder="Age">
               </div>
             </div>
             <!-- Victim delete button -->
@@ -64,7 +58,7 @@
             <!-- Tag name input -->
             <div class="form-group form-group-lg">
               <div class="col-sm-12">
-                <input type="text" class="form-control tag-input" placeholder="Tag" value="test">
+                <input type="text" class="form-control tag-input" placeholder="Tag">
               </div>
             </div>
             <!-- Tag delete button -->
@@ -93,13 +87,13 @@
             <!-- Link name input -->
             <div class="form-group form-group-lg">
               <div class="col-sm-12">
-                <input type="text" class="form-control link-name-input" placeholder="Name" value="google">
+                <input type="text" class="form-control link-name-input" placeholder="Name">
               </div>
             </div>
             <!-- Link address input -->
             <div class="form-group form-group-lg">
               <div class="col-sm-12">
-                <input type="text" class="form-control link-input" placeholder="Link" value="google.com">
+                <input type="text" class="form-control link-input" placeholder="Link">
               </div>
             </div>
             <!-- Link delete button -->
@@ -125,21 +119,18 @@
         </div>
         <div class="panel-body">
           <div class="form-group form-group-lg">
-            <label for="date-input" class="col-sm-2 control-label">Date</label>
-            <div class="col-sm-10">
-              <input type="datetime-local" class="form-control" id="date-input" placeholder="Date" value="2001-01-01T01:01:01.001">
+            <div class="col-sm-12">
+              <input type="datetime-local" class="form-control" id="date-input" placeholder="Date"> <!-- Value example: "2001-01-01T01:01:01.001" -->
             </div>
           </div>
           <div class="form-group form-group-lg">
-            <label for="latitude-input" class="col-sm-2 control-label">Latitude</label>
-            <div class="col-sm-10">
-              <input type="number" class="form-control" id="latitude-input" placeholder="Latitude" value="37.3588605">
+            <div class="col-sm-12">
+              <input type="number" class="form-control" id="latitude-input" placeholder="Latitude">
             </div>
           </div>
           <div class="form-group form-group-lg">
-            <label for="longitude-input" class="col-sm-2 control-label">Longitude</label>
-            <div class="col-sm-10">
-              <input type="number" class="form-control" id="longitude-input" placeholder="Longitude" value="-122.0322778">
+            <div class="col-sm-12">
+              <input type="number" class="form-control" id="longitude-input" placeholder="Longitude">
             </div>
           </div>
         </div><!-- div class="panel-body" -->
