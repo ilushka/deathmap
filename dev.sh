@@ -5,6 +5,9 @@ function heroku_commands() {
         "push")
             git push heroku master
             ;;
+        "dbpush")
+            heroku pg:push postgresql://deathmap:password@localhost/deathmap DATABASE_URL
+            ;;
     esac
 }
 

@@ -4,10 +4,11 @@
 {% endblock %}
 
 {% block body %}
-  <dev id="list-container" class="container">
+  <div id="list-container" class="container">
     <table class="table table-striped">
       <thead>
         <tr>
+          <th>id</th>
           <th>Victims</th>
           <th>Date</th>
           <th>Latitude</th>
@@ -17,11 +18,35 @@
         </tr>
       </thead>
       <tbody id="list-tbody">
+        {% for c in crashes %}
+          <tr>
+            <td><a href='/crash/{{ c.id }}/edit'>{{ c.id }}</a></td>
+            <td>
+              {% for v in c.victims %}
+                {{ v.first }} {{ v.last }} ({{ v.age }})
+              {% endfor %}
+            </td>
+            <td>{{ c.date }}</td>
+            <td>{{ c.latitude }}</td>
+            <td>{{ c.longitude }}</td>
+            <td>
+              {% for l in c.links %}
+                <a href="{{ l.link }}" target="_blank">{{ loop.index }}</a>
+              {% endfor %}
+            </td>
+            <td>
+              {% for t in c.tags %}
+                {{ t.name }}
+              {% endfor %}
+            </td>
+          </tr>
+        {% endfor %}
       </tbody>
     </table>
-  </dev>
+  </div>
 {% endblock %}
 
+{#
 {% block javascript %}
   <script type="text/javascript">
 var crashTableRow = function(crash) {
@@ -42,6 +67,7 @@ var crashTableRow = function(crash) {
           return prev + curr + ", ";
         }, "").slice(0, -2);
 
+  $row.append("<td><a href='/crash/" + crash.id + "/edit'>" + crash.id + "</a></td>");
   $row.append("<td>" + victims + "</td>");
   $row.append("<td>" + crash.date + "</td>");
   $row.append("<td>" + crash.latitude + "</td>");
@@ -62,3 +88,4 @@ $.ajax({url: "/crash/all"})
 
   </script>
 {% endblock %}
+#}
