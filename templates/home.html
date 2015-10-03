@@ -51,7 +51,7 @@ function initMap() {
     return content.prop("outerHTML");
   };
 
-  $.ajax({url: "/crash/all"})
+  $.ajax({url: "/crash/all/json"})
     .done(function(crashes) {
       var infowindow = new google.maps.InfoWindow();
       for (var ii = 0; ii < crashes.length; ++ii) {

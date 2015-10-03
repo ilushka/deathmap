@@ -11,6 +11,7 @@ app.config["SQLALCHEMY_DATABASE_URI"] = os.environ["DATABASE_URL"]
 Bower(app)
 db = SQLAlchemy(app)
 
+
 def list_intersection_update(a, b):
   for ii in a:
     if ii not in b:
@@ -172,16 +173,23 @@ def home():
 def add():
   return render_template("add.html")
 
-@app.route("/crash/all/list")
-def crash_list():
-  return render_template("list.html", crashes=Crash.query.all())
+ORDER = {
+  "id": Crash.id,
+  "date": Crash.date
+}
 
 @app.route("/crash/<crash_id>")
-def crash(crash_id=None):
+@app.route("/crash/<crash_id>/<out_type>")
+def crash(crash_id=None, out_type="json"):
+  order = ORDER.get(request.args.get('order'), ORDER.get("id"))
+  crashes = Crash.query.order_by(order)
   if str(crash_id) == "all":
-    return Response(response=json.dumps(Crash.query.all(), cls=CrashEncoder),
-                    status=200,
-                    mimetype="application/json")
+    if str(out_type) == "json":
+      return Response(response=json.dumps(crashes.all(), cls=CrashEncoder),
+                      status=200,
+                      mimetype="application/json")
+    elif str(out_type) == "html":
+      return render_template("list.html", crashes=crashes)
 
 @app.route("/crash/<crash_id>/edit")
 def edit(crash_id=None):
