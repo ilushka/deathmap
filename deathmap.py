@@ -36,6 +36,14 @@ login_manager.login_view = "login"
 Bower(app)
 db = SQLAlchemy(app)
 
+# NOTE: How to add functions to templates:
+#
+# @app.context_processor
+# def utility_processor():
+#   def is_authenticated():
+#     return not login_manager.unauthorized()
+#   return dict(is_authenticated=is_authenticated)
+
 @login_manager.user_loader
 def load_user(id):
     return app.config["USERS"][id]
@@ -193,14 +201,14 @@ class Tag(db.Model):
       return False
     return True
 
-@app.route("/")
-def home():
-  return render_template("home.html")
-
 ORDER = {
   "id": Crash.id,
   "date": Crash.date
 }
+
+@app.route("/")
+def home():
+  return render_template("home.html")
 
 @app.route("/crash/<crash_id>")
 @app.route("/crash/<crash_id>/<out_type>")

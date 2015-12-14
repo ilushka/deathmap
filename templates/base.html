@@ -37,9 +37,11 @@
           <a href="#" class="navbar-brand">roadviolence.org</a>
         </div>
         <div id="navbar" class="collapse navbar-collapse">
-          <form class="navbar-form navbar-right" action="/logout">
-            <button type="submit" class="btn btn-danger">Logout</button>
-          </form>
+          {% if current_user.is_authenticated %}
+            <form class="navbar-form navbar-right" action="/logout">
+              <button type="submit" class="btn btn-danger">Logout</button>
+            </form>
+          {% endif %}
         </div>
       </div>
     </nav>
