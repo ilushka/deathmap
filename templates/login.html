@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block head %}
+  <style type="text/css">
+    .login {
+      width: 300px;
+      margin: 20px auto;
+    }
+  </style>
+{% endblock %}
+
+{% block body %}
+  <form class="login" method="post">
+    <div class="form-group">
+      <input type="text" class="form-control" id="username" name="username" placeholder="Username">
+    </div>
+    <div class="form-group">
+      <input type="password" class="form-control" id="password" name="password" placeholder="Password">
+    </div>
+    <button type="submit" class="btn btn-primary">Login</button>
+  </form>
+{% endblock %}
+
+{% block javascript %}
+{% endblock %}
