@@ -2,6 +2,9 @@
 
 {% block head %}
   <title>Add crash</title>
+  <style type="text/css">
+    #map { width: 100%; height: 200px; }
+  </style>
 {% endblock %}
 
 {% macro victim(victim=None) -%}
@@ -128,6 +131,7 @@
                  {{ "value=" + crash.longitude | string if crash }} >
         </div>
       </div>
+      <div id="map"></div>
     </div><!-- div class="panel-body" -->
   </div><!-- div class="panel panel-default" -->
 {%- endmacro %}
@@ -187,9 +191,7 @@
       </div>
 
       <!-- Date, Latitude, and Longitude -->
-      <div id="crash-info-container">
-        {{ crash_info(crash) }}
-      </div>
+      <div id="crash-info-container"> {{ crash_info(crash) }} </div>
 
       <!-- Create button -->
       <div class="form-group form-group-lg">
@@ -286,5 +288,46 @@ $(document).ready(function () {
   });
 });
 
+var map, marker = null;
+function initMap() {
+  var addMarker = function(latitude, longitude) {
+    if (marker != null) {
+      marker.setMap(null);
+    }
+    marker = new google.maps.Marker({
+      position: { lat: latitude, lng: longitude },
+      map: map
+    });
+  };
+
+  map = new google.maps.Map(document.getElementById("map"), {
+    center: {
+      lat: {{ crash.latitude | string if crash else 37.5 }},
+      lng: {{ crash.longitude | string if crash else -122.1 }}
+    },
+    zoom: 14,
+    panControl: false,
+    zoomControl: false,
+    mapTypeControl: false,
+    scaleControl: false,
+    streetViewControl: false,
+    overviewMapControl: false
+  });
+
+  {% if crash %}
+    addMarker({{ crash.latitude }}, {{ crash.longitude }});
+  {% endif %}
+
+  map.addListener('click', function(event) {
+    $("#latitude-input").first().val(event.latLng.lat());
+    $("#longitude-input").first().val(event.latLng.lng());
+    addMarker(event.latLng.lat(), event.latLng.lng());
+  });
+}
+
+  </script>
+
+  <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCNR_PQxoUtbFLRaLGV3NNZIq7sjqKojYA&callback=initMap">
   </script>
 {% endblock %}
