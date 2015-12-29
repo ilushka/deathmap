@@ -45,6 +45,10 @@ function start_local() {
         python deathmap.py
 }
 
+function drop_database() {
+    psql --command="drop database deathmap;"
+}
+
 function heroku_commands() {
     case $1 in
         "push") # heroku-arg;
@@ -71,6 +75,9 @@ case $1 in
         ;;
     "start") # first-level-arg;
         start_local
+        ;;
+    "dbdrop") # first-level-arg;
+        drop_database
         ;;
     "help") # first-level-arg;
         show_usage "${@:2}"
