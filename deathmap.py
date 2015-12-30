@@ -5,17 +5,26 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import datetime
 import dateutil.parser
 import os
-from deathdb import db, CrashEncoder, CrashDecoder, Crash, Victim, Link, Tag 
+from deathdb import db, CrashEncoder, CrashDecoder, Crash, Victim, Link, Tag, User
 
 
 # NOTE: LanterneUser's id must be unicode
 class DeathmapUser(UserMixin):
     """ Deathmap user"""
 
-    def __init__(self, name, password):
-        self.name = name
-        self.id = name
-        self.set_password(password)
+    def __init__(self, username, first, last, email, info, password=None, password_hash=None):
+        if isinstance(username, unicode):
+          self.id = username
+        else:
+          self.id = unicode(username, "utf-8")
+        self.first = first
+        self.last = last
+        self.email = email
+        self.info = info
+        if password is not None:
+          self.set_password(password)
+        if password_hash is not None:
+          self.pw_hash = password_hash
 
     def set_password(self, password):
         self.pw_hash = generate_password_hash(password)
@@ -23,12 +32,25 @@ class DeathmapUser(UserMixin):
     def check_password(self, password):
         return check_password_hash(self.pw_hash, password)
 
+def duser_to_user(duser):
+  return User(username=duser.id,
+              first=duser.first,
+              last=duser.last,
+              email=duser.email,
+              password_hash=duser.pw_hash,
+              info=duser.info)
+
+def user_to_duser(user):
+  return DeathmapUser(username=user.username,
+                      first=user.first,
+                      last=user.last,
+                      email=user.email,
+                      info=user.info,
+                      password_hash=user.password_hash)
+
 app = Flask(__name__)
 app.debug = True
 app.config["SQLALCHEMY_DATABASE_URI"] = os.environ["DATABASE_URL"]
-app.config["USERS"] = {
-    u"admin": DeathmapUser(u"admin", u"CREAMcgtmddby")
-}
 app.secret_key = "i am a secret"
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -46,7 +68,10 @@ db.init_app(app)
 
 @login_manager.user_loader
 def load_user(id):
-    return app.config["USERS"][id]
+    user = User.query.filter_by(username=id).first()
+    if user is None:
+      return None
+    return user_to_duser(user)
 
 ORDER = {
   "id": Crash.id,
@@ -87,9 +112,11 @@ def edit(crash_id=None):
 def crash_add(crash_id=None):
   new_crash = CrashDecoder().decode(request.json)
   if crash_id:
+    # retrieve and update crash
     crash = db.session.query(Crash).get(crash_id);
     crash.update_crash(new_crash)
   else:
+    # add new crash
     db.session.add(new_crash)
   db.session.commit()
   return render_template("add.html")
@@ -101,14 +128,16 @@ def login():
       and "password" in request.form:
     name = request.form["username"]
     password = request.form["password"]
-    if name in app.config["USERS"].keys():
-        user = app.config["USERS"][name]
-        if user.check_password(password):
-          login_user(user)
-          flash("Logged in!")
-          return redirect(request.args.get("next"))
+    duser = load_user(name)
+
+    if duser is None:
+      flash("Invalid username.")
     else:
-        flash("Invalid username.")
+      if duser.check_password(password):
+        login_user(duser)
+        flash("Logged in!")
+        return redirect(request.args.get("next"))
+
   return render_template("login.html")
 
 @app.route("/logout")

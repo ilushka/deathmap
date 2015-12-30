@@ -1,5 +1,7 @@
 from flask import Flask
 from flask.ext.sqlalchemy import SQLAlchemy
+from sqlalchemy.types import TypeDecorator, VARCHAR
+import json
 
 db = SQLAlchemy()
 
@@ -14,6 +16,21 @@ def list_update(a, b):
       # NOTE:
       b.remove(ii)
       a.append(ii)
+
+class JSONData(TypeDecorator):
+  """ Custom JSON data type for SQLAlchemy """
+
+  impl = VARCHAR
+
+  def process_bind_param(self, value, dialect):
+    if value is not None:
+      value = json.dumps(value)
+    return value
+
+  def process_result_value(self, value, dialect):
+    if value is not None:
+      value = json.loads(value)
+    return value
 
 class CrashEncoder(Flask.json_encoder):
   def default(self, crash):
@@ -155,4 +172,23 @@ class Tag(db.Model):
     if self.name != other.name:
       return False
     return True
+
+class User(db.Model):
+  __tablename__ = "users"
+
+  id = db.Column(db.Integer, primary_key=True)
+  username = db.Column(db.String(64))
+  first = db.Column(db.String(64))
+  last = db.Column(db.String(64))
+  email = db.Column(db.String(254))
+  password_hash = db.Column(db.String(192))
+  info = db.Column(JSONData())
+
+  def __init__(self, username, first, last, email, password_hash, info):
+    self.username = username
+    self.first = first
+    self.last = last
+    self.email = email
+    self.password_hash = password_hash
+    self.info = info
 
