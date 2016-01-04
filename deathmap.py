@@ -3,10 +3,8 @@ from flask.ext.bower import Bower
 from flask.ext.login import LoginManager, login_user, logout_user, UserMixin, login_required, fresh_login_required
 from werkzeug.security import generate_password_hash, check_password_hash
 import datetime
-import dateutil.parser
 import os
 from deathdb import db, CrashEncoder, CrashDecoder, Crash, Victim, Link, Tag, User
-
 
 # NOTE: LanterneUser's id must be unicode
 class DeathmapUser(UserMixin):
@@ -139,6 +137,10 @@ def login():
         return redirect(request.args.get("next"))
 
   return render_template("login.html")
+
+@app.route("/user", methods=["GET", "POST"])
+def user():
+  return render_template("user.html")
 
 @app.route("/logout")
 @login_required

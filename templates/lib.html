@@ -1,0 +1,37 @@
+{% macro panel(title, class=None) -%}
+  <div class="panel panel-default {{ class }}">
+    <div class="panel-heading">
+      <h3 class="panel-title">{{ title }}</h3>
+    </div>
+    <div class="panel-body">
+      {{ caller() }}
+    </div>
+  </div>
+{%- endmacro %}
+
+{% macro panel_input(placeholder, class=None, value=None, type="text") -%}
+  <div class="form-group form-group-lg">
+    <div class="col-sm-12">
+      <input type="{{ type }}"
+             class="form-control {{ class }}"
+             placeholder="{{ placeholder }}"
+             {{ "value=" + value|string if value }} >
+    </div>
+  </div>
+{%- endmacro %}
+
+{% macro panel_intr_sml_btn(name, class=None) -%}
+  <div class="form-group form-group-lg">
+    <div class="col-sm-offset-10 col-sm-2">
+      <button type="submit" class="btn btn-danger btn-xs {{ class }}">{{ name }}</button>
+    </div>
+  </div>
+{%- endmacro %}
+
+{% macro panel_extr_left_sml_btn(name, class=None) -%}
+  <div class="form-group form-group-lg">
+    <div class="col-sm-1">
+      <button type="submit" class="btn btn-primary btn-xs {{ class }}">{{ name }}</button>
+    </div>
+  </div>
+{%- endmacro %}

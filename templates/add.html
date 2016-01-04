@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% import "lib.html" as lib %}
 
 {% block head %}
   <title>Add crash</title>
@@ -8,132 +9,63 @@
 {% endblock %}
 
 {% macro victim(victim=None) -%}
-  <div class="panel panel-default victim-form-group">
-    <div class="panel-heading">
-      <h3 class="panel-title">Victim</h3>
-    </div>
-    <div class="panel-body">
-      <!-- First name -->
-      <div class="form-group form-group-lg">
-        <div class="col-sm-12">
-          <input type="text" class="form-control firstname-input" 
-                 placeholder="First Name"
-                 {{ "value=" + victim.first if victim }} >
-        </div>
-      </div>
-      <!-- Last name -->
-      <div class="form-group form-group-lg">
-        <div class="col-sm-12">
-          <input type="text" class="form-control lastname-input"
-                 placeholder="Last Name"
-                 {{ "value=" + victim.last if victim }} >
-        </div>
-      </div>
-      <!-- Age -->
-      <div class="form-group form-group-lg">
-        <div class="col-sm-12">
-          <input type="number" class="form-control age-input"
-                 placeholder="Age"
-                 {{ "value=" + victim.age|string if victim }} >
-        </div>
-      </div>
-      <!-- Victim delete button -->
-      <div class="form-group form-group-lg">
-        <div class="col-sm-offset-10 col-sm-2">
-          <button type="submit" class="btn btn-danger btn-xs del-victim-btn">Delete</button>
-        </div>
-      </div>
-    </div><!-- div class="panel-body" -->
-  </div><!-- div class="panel panel-default victim-form-group" -->
+  {% call lib.panel("Victim", "victim-form-group") %}
+      {% if victim %} 
+        {{ lib.panel_input("First Name", "firstname-input", value=victim.first) }}
+        {{ lib.panel_input("Last Name", "lastname-input", value=victim.last) }}
+        {{ lib.panel_input("Age", "age-input", type="number", value=victim.age) }}
+      {% else %}
+        {{ lib.panel_input("First Name", "firstname-input") }}
+        {{ lib.panel_input("Last Name", "lastname-input") }}
+        {{ lib.panel_input("Age", "age-input", type="number") }}
+      {% endif %}
+      {{ lib.panel_intr_sml_btn("Delete", class="del-victim-btn") }}
+  {% endcall %}
 {%- endmacro %}
 
 {% macro tag(tag=None) -%}
-  <div class="panel panel-default tag-form-group">
-    <div class="panel-heading">
-      <h3 class="panel-title">Tag</h3>
-    </div>
-    <div class="panel-body">
-      <!-- Tag name input -->
-      <div class="form-group form-group-lg">
-        <div class="col-sm-12">
-          <input type="text" class="form-control tag-input"
-                 placeholder="Tag"
-                 {{ "value=" + tag.name if tag }} >
-        </div>
-      </div>
-      <!-- Tag delete button -->
-      <div class="form-group form-group-lg">
-        <div class="col-sm-offset-10 col-sm-2">
-          <button type="submit" class="btn btn-danger btn-xs del-tag-btn">Delete</button>
-        </div>
-      </div>
-    </div><!-- div class="panel-body" -->
-  </div><!-- div class="panel panel-default tag-form-group" -->
+  {% call lib.panel("Tag", "tag-form-group") %}
+      {% if tag %} 
+        {{ lib.panel_input("Tag", "tag-input", value=tag.name) }}
+      {% else %}
+        {{ lib.panel_input("Tag", "tag-input") }}
+      {% endif %}
+      {{ lib.panel_intr_sml_btn("Delete", class="del-tag-btn") }}
+  {% endcall %}
 {%- endmacro %}
 
 {% macro link(link=None) -%}
-  <div class="panel panel-default link-form-group">
-    <div class="panel-heading">
-      <h3 class="panel-title">Link</h3>
-    </div>
-    <div class="panel-body">
-      <!-- Link name input -->
-      <div class="form-group form-group-lg">
-        <div class="col-sm-12">
-          <input type="text" class="form-control link-name-input"
-                 placeholder="Name"
-                 {{ "value=" + link.name if link }} >
-        </div>
-      </div>
-      <!-- Link address input -->
-      <div class="form-group form-group-lg">
-        <div class="col-sm-12">
-          <input type="text" class="form-control link-input"
-                 placeholder="Link"
-                 {{ "value=" + link.link if link }} >
-        </div>
-      </div>
-      <!-- Link delete button -->
-      <div class="form-group form-group-lg">
-        <div class="col-sm-offset-10 col-sm-2">
-          <button type="submit" class="btn btn-danger btn-xs del-link-btn">Delete</button>
-        </div>
-      </div>
-    </div><!-- div class="panel-body" -->
-  </div><!-- div class="panel panel-default link-form-group" -->
+  {% call lib.panel("Link", "link-form-group") %}
+      {% if link %} 
+        {{ lib.panel_input("Name", "link-name-input", value=link.name) }}
+        {{ lib.panel_input("Link", "link-input", value=link.link) }}
+      {% else %}
+        {{ lib.panel_input("Name", "link-name-input") }}
+        {{ lib.panel_input("Link", "link-input") }}
+      {% endif %}
+      {{ lib.panel_intr_sml_btn("Delete", class="del-link-btn") }}
+  {% endcall %}
 {%- endmacro %}
 
 {% macro crash_info(crash=None) -%}
-  <div class="panel panel-default">
-    <div class="panel-heading">
-      <h3 class="panel-title">Crash Info</h3>
-    </div>
-    <div class="panel-body">
-      <div class="form-group form-group-lg">
-        <div class="col-sm-12">
-          <input type="datetime-local" class="form-control" id="date-input"
-                 placeholder="Date" 
-                 {{ "value=" + crash.date.isoformat() if crash }} >
-                 <!-- Value example: "2001-01-01T01:01:01.001" -->
-        </div>
-      </div>
-      <div class="form-group form-group-lg">
-        <div class="col-sm-12">
-          <input type="number" class="form-control" id="latitude-input"
-                 placeholder="Latitude"
-                 {{ "value=" + crash.latitude | string if crash }} >
-        </div>
-      </div>
-      <div class="form-group form-group-lg">
-        <div class="col-sm-12">
-          <input type="number" class="form-control" id="longitude-input"
-                 placeholder="Longitude"
-                 {{ "value=" + crash.longitude | string if crash }} >
-        </div>
-      </div>
+  {% call lib.panel("Crash Info") %}
+      {% if crash %} 
+        {{ lib.panel_input("Date", "date-input",
+                           value=crash.date.isoformat(),
+                           type="datetime-local") }}
+        {{ lib.panel_input("Latitude", "latitude-input",
+                           value=crash.latitude,
+                           type="number") }}
+        {{ lib.panel_input("Longitude", "longitude-input",
+                           value=crash.longitude,
+                           type="number") }}
+      {% else %}
+        {{ lib.panel_input("Date", "date-input", type="datetime-local") }}
+        {{ lib.panel_input("Latitude", "latitude-input", type="number") }}
+        {{ lib.panel_input("Longitude", "longitude-input", type="number") }}
+      {% endif %}
       <div id="map"></div>
-    </div><!-- div class="panel-body" -->
-  </div><!-- div class="panel panel-default" -->
+  {% endcall %}
 {%- endmacro %}
 
 {% block body %}
@@ -149,12 +81,7 @@
           {{ victim() }}
         {% endif %}
       </div><!-- div id="victims-container" -->
-      <!-- Victim add button -->
-      <div class="form-group form-group-lg">
-        <div class="col-sm-1">
-          <button id="add-victim-btn" type="submit" class="btn btn-primary btn-xs">Add Victim</button>
-        </div>
-      </div>
+      {{ lib.panel_extr_left_sml_btn("Add Victim", "add-victim-btn") }}
 
       <!-- Tags -->
       <div id="tags-container">
@@ -166,12 +93,7 @@
           {{ tag() }}
         {% endif %}
       </div><!-- div id="tags-container" -->
-      <!-- Tag add button -->
-      <div class="form-group form-group-lg">
-        <div class="col-sm-1">
-          <button id="add-tag-btn" type="submit" class="btn btn-primary btn-xs">Add Tag</button>
-        </div>
-      </div>
+      {{ lib.panel_extr_left_sml_btn("Add Tag", "add-tag-btn") }}
 
       <!-- Links -->
       <div id="links-container">
@@ -183,12 +105,7 @@
           {{ link() }}
         {% endif %}
       </div><!-- div id="links-container" -->
-      <!-- Link add button -->
-      <div class="form-group form-group-lg">
-        <div class="col-sm-1">
-          <button id="add-link-btn" type="submit" class="btn btn-primary btn-xs">Add Link</button>
-        </div>
-      </div>
+      {{ lib.panel_extr_left_sml_btn("Add Link", "add-link-btn") }}
 
       <!-- Date, Latitude, and Longitude -->
       <div id="crash-info-container"> {{ crash_info(crash) }} </div>
@@ -214,7 +131,7 @@ $(document).ready(function () {
     event.preventDefault();
     $(this).parents(".victim-form-group").remove();
   });
-  $("#add-victim-btn").click(function (event) {
+  $(".add-victim-btn").first().click(function (event) {
     event.preventDefault();
     $(".victim-form-group").first().clone(true).appendTo("#victims-container");
   });
@@ -224,7 +141,7 @@ $(document).ready(function () {
     event.preventDefault();
     $(this).parents(".tag-form-group").remove();
   });
-  $("#add-tag-btn").click(function (event) {
+  $(".add-tag-btn").first().click(function (event) {
     event.preventDefault();
     $(".tag-form-group").first().clone(true).appendTo("#tags-container");
   });
@@ -234,7 +151,7 @@ $(document).ready(function () {
     event.preventDefault();
     $(this).parents(".link-form-group").remove();
   });
-  $("#add-link-btn").click(function (event) {
+  $(".add-link-btn").first().click(function (event) {
     event.preventDefault();
     $(".link-form-group").first().clone(true).appendTo("#links-container");
   });
@@ -271,9 +188,9 @@ $(document).ready(function () {
         link: $(this).find(".link-input").first().val()
       });
     });
-    crash.date = $("#date-input").first().val();
-    crash.latitude = $("#latitude-input").first().val();
-    crash.longitude = $("#longitude-input").first().val();
+    crash.date = $(".date-input").first().val();
+    crash.latitude = $(".latitude-input").first().val();
+    crash.longitude = $(".longitude-input").first().val();
 
     $.ajax({
       type: "POST",
@@ -319,12 +236,11 @@ function initMap() {
   {% endif %}
 
   map.addListener('click', function(event) {
-    $("#latitude-input").first().val(event.latLng.lat());
-    $("#longitude-input").first().val(event.latLng.lng());
+    $(".latitude-input").first().val(event.latLng.lat());
+    $(".longitude-input").first().val(event.latLng.lng());
     addMarker(event.latLng.lat(), event.latLng.lng());
   });
 }
-
   </script>
 
   <script async defer
