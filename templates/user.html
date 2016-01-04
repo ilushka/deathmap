@@ -4,8 +4,47 @@
   <title>Settings</title>
 {% endblock %}
 
+{% macro profile(user) -%}
+  {% call lib.panel("Profile", "profile-form-group") %}
+    {{ lib.panel_input("Username", "firstname-input") }}
+    {{ lib.panel_input("E-Mail", "firstname-input") }}
+    {{ lib.panel_input("First Name", "firstname-input") }}
+    {{ lib.panel_input("Last Name", "firstname-input") }}
+    {{ lib.panel_input("Twitter", "firstname-input") }}
+  {% endcall %}
+{%- endmacro %}
+
+{% macro password(user) -%}
+  {% call lib.panel("Password", "password-form-group") %}
+    {{ lib.panel_input("Old Password", "firstname-input") }}
+    {{ lib.panel_input("New Password", "firstname-input") }}
+    {{ lib.panel_input("Repeat New Password", "firstname-input") }}
+  {% endcall %}
+{%- endmacro %}
+
 {% block body %}
-MONKEY
+  <div class="container" style="width:500px;">
+    <form id="settings-form" class="form-horizontal">
+      <!-- Profile -->
+      <div id="profile-container">
+        {{ profile(current_user) }}
+      </div>
+
+      <!-- Password -->
+      <div id="password-container">
+        {{ password(current_user) }}
+      </div>
+
+      <!-- Create button -->
+      <div class="form-group form-group-lg">
+        <div class="col-sm-2">
+          <button id="create-crash-btn" type="submit" class="btn btn-primary btn-lg">
+            {{ "Edit" if crash else "Create" }}
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
 {% endblock %}
 
 {% block javascript %}

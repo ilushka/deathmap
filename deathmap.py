@@ -139,6 +139,7 @@ def login():
   return render_template("login.html")
 
 @app.route("/user", methods=["GET", "POST"])
+@login_required
 def user():
   return render_template("user.html")
 
