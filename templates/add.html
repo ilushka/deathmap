@@ -200,6 +200,9 @@ $(document).ready(function () {
       contentType: "application/json",
       success: function() {
         alert("Sent crash data");
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        alert("Failed to send crash data " + textStatus + " " + errorThrown);
       }
     });
   });

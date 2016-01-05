@@ -9,13 +9,15 @@
   </div>
 {%- endmacro %}
 
-{% macro panel_input(placeholder, class=None, value=None, type="text") -%}
+{% macro panel_input(placeholder, class=None, value=None, type="text", disabled=False, name=None) -%}
   <div class="form-group form-group-lg">
     <div class="col-sm-12">
       <input type="{{ type }}"
              class="form-control {{ class }}"
              placeholder="{{ placeholder }}"
-             {{ "value=" + value|string if value }} >
+             {{ "value=" + value|string if value }}
+             {{ "disabled" if disabled }}
+             {{ "name=" + name|string if name }} >
     </div>
   </div>
 {%- endmacro %}

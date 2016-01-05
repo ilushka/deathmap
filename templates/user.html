@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% import "lib.html" as lib %}
 
 {% block head %}
   <title>Settings</title>
@@ -6,25 +7,25 @@
 
 {% macro profile(user) -%}
   {% call lib.panel("Profile", "profile-form-group") %}
-    {{ lib.panel_input("Username", "firstname-input") }}
-    {{ lib.panel_input("E-Mail", "firstname-input") }}
-    {{ lib.panel_input("First Name", "firstname-input") }}
-    {{ lib.panel_input("Last Name", "firstname-input") }}
-    {{ lib.panel_input("Twitter", "firstname-input") }}
+    {{ lib.panel_input("Username", value=user.id, disabled=True) }}
+    {{ lib.panel_input("E-Mail", value=user.email, disabled=True) }}
+    {{ lib.panel_input("First Name", value=user.first, name="firstname") }}
+    {{ lib.panel_input("Last Name", value=user.last, name="lastname") }}
+    {{ lib.panel_input("Twitter",  value=user.info.twitter, name="twitter") }}
   {% endcall %}
 {%- endmacro %}
 
 {% macro password(user) -%}
   {% call lib.panel("Password", "password-form-group") %}
-    {{ lib.panel_input("Old Password", "firstname-input") }}
-    {{ lib.panel_input("New Password", "firstname-input") }}
-    {{ lib.panel_input("Repeat New Password", "firstname-input") }}
+    {{ lib.panel_input("Old Password", "oldpass-input", type="password", name="old-password") }}
+    {{ lib.panel_input("New Password", "newpass-input", type="password", name="new-password") }}
+    {{ lib.panel_input("Repeat New Password", "newpass-repeat-input", type="password") }}
   {% endcall %}
 {%- endmacro %}
 
 {% block body %}
   <div class="container" style="width:500px;">
-    <form id="settings-form" class="form-horizontal">
+    <form id="settings-form" class="form-horizontal" method="post">
       <!-- Profile -->
       <div id="profile-container">
         {{ profile(current_user) }}
@@ -35,11 +36,11 @@
         {{ password(current_user) }}
       </div>
 
-      <!-- Create button -->
+      <!-- Update button -->
       <div class="form-group form-group-lg">
         <div class="col-sm-2">
-          <button id="create-crash-btn" type="submit" class="btn btn-primary btn-lg">
-            {{ "Edit" if crash else "Create" }}
+          <button type="submit" class="btn btn-primary btn-lg update-user-btn">
+            Update
           </button>
         </div>
       </div>
@@ -48,4 +49,62 @@
 {% endblock %}
 
 {% block javascript %}
+  <script type="text/javascript">
+
+$(document).ready(function () {
+  // Create button:
+/*
+  $(".update-user-btn").first().click(function (event) {
+    event.preventDefault();
+*/
+
+/*
+    var crash = {
+          victims: [],
+          tags: [],
+          links: []
+        };
+
+    $(".victim-form-group").each(function() {
+      crash.victims.push({
+        first: $(this).find(".firstname-input").first().val(),
+        last: $(this).find(".lastname-input").first().val(),
+        age: parseInt($(this).find(".age-input").first().val()),
+      });
+    });
+    $(".tag-form-group").each(function() {
+      crash.tags.push($(this).find(".tag-input").first().val());
+    });
+    $(".link-form-group").each(function() {
+      crash.links.push({
+        name: $(this).find(".link-name-input").first().val(),
+        link: $(this).find(".link-input").first().val()
+      });
+    });
+    crash.date = $(".date-input").first().val();
+    crash.latitude = $(".latitude-input").first().val();
+    crash.longitude = $(".longitude-input").first().val();
+*/
+
+/*
+    var oldpass = $(".oldpass-input").val(),
+        newpass = $(".newpass-input").val(),
+        newpass_repeat = $(".newpass-repeat-input").val();
+    if (oldpass && newpass && newpass_repeat) {
+      $.ajax({
+        type: "POST",
+        url: "/user/password/{{ current_user.id }}",
+        data: JSON.stringify({ "old": oldpass, "new": newpass }),
+        dataType: "json",
+        contentType: "application/json",
+        success: function() {
+          alert("Sent settings data");
+        }
+      });
+    }
+  });
+});
+*/
+  </script>
+
 {% endblock %}

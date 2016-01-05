@@ -193,3 +193,8 @@ class User(db.Model):
     self.password_hash = password_hash
     self.info = info
 
+  def update_info(self, info):
+    self.info = dict(self.info)
+    for k, v in info.iteritems():
+      self.info[k] = v
+

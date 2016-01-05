@@ -1,6 +1,6 @@
-from flask import Flask, render_template, jsonify, Response, request, json, abort, flash, redirect, url_for
+from flask import Flask, render_template, jsonify, Response, request, json, abort, flash, redirect, url_for, jsonify
 from flask.ext.bower import Bower
-from flask.ext.login import LoginManager, login_user, logout_user, UserMixin, login_required, fresh_login_required
+from flask.ext.login import LoginManager, login_user, logout_user, UserMixin, login_required, fresh_login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 import datetime
 import os
@@ -117,7 +117,7 @@ def crash_add(crash_id=None):
     # add new crash
     db.session.add(new_crash)
   db.session.commit()
-  return render_template("add.html")
+  return jsonify({})
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -134,13 +134,43 @@ def login():
       if duser.check_password(password):
         login_user(duser)
         flash("Logged in!")
-        return redirect(request.args.get("next"))
+        if request.args.get("next") is not None:
+          return redirect(request.args.get("next"))
+        else:
+          return redirect(url_for("home"))
 
+  if current_user is not None and current_user.is_authenticated:
+    return redirect(url_for("home"))
+    
   return render_template("login.html")
 
 @app.route("/user", methods=["GET", "POST"])
 @login_required
 def user():
+  if request.method == "POST":
+    user = db.session.query(User).filter_by(username=current_user.id).first()
+    if user is None:
+      abort(401)
+
+    # update first name
+    if "firstname" in request.form:
+      user.first = request.form["firstname"]
+    # update last name
+    if "lastname" in request.form:
+      user.last = request.form["lastname"]
+    # update twitter
+    if "twitter" in request.form:
+      user.update_info({"twitter": request.form["twitter"]})
+    # change password
+    if "old-password" in request.form \
+        and "new-password" in request.form:
+      # check old password
+      if current_user.check_password(request.form["old-password"]):
+        current_user.set_password(request.form["new-password"])
+        user.password_hash = current_user.pw_hash
+
+    db.session.commit()
+
   return render_template("user.html")
 
 @app.route("/logout")

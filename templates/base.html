@@ -38,8 +38,9 @@
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           {% if current_user.is_authenticated %}
-            <form class="navbar-form navbar-right" action="/logout">
-              <button type="submit" class="btn btn-danger">Logout</button>
+            <form class="navbar-form navbar-right">
+              <button type="submit" class="btn btn-primary" formaction="/user">Settings</button>
+              <button type="submit" class="btn btn-danger" formaction="/logout">Logout</button>
             </form>
           {% endif %}
         </div>
