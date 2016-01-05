@@ -108,7 +108,12 @@ def edit(crash_id=None):
 @app.route("/crash/<crash_id>", methods=["POST"])
 @login_required
 def crash_add(crash_id=None):
+  print "POST /crash " + str(request.json)
+
   new_crash = CrashDecoder().decode(request.json)
+  if new_crash is None:
+    abort(400)
+
   if crash_id:
     # retrieve and update crash
     crash = db.session.query(Crash).get(crash_id);
@@ -117,6 +122,7 @@ def crash_add(crash_id=None):
     # add new crash
     db.session.add(new_crash)
   db.session.commit()
+
   return jsonify({})
 
 @app.route("/login", methods=["GET", "POST"])

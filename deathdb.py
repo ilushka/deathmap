@@ -60,14 +60,53 @@ class CrashEncoder(Flask.json_encoder):
 
 class CrashDecoder(Flask.json_decoder):
   def decode(self, obj):
-    crash = Crash(dateutil.parser.parse(obj["date"]), float(obj["latitude"]),
-                  float(obj["longitude"]));
+    # check for required fields
+    if "date" not in obj \
+        or "latitude" not in obj \
+        or "longitude" not in obj \
+        or "victims" not in obj \
+        or len(obj["victims"]) == 0 \
+        or obj["latitude"] is None \
+        or obj["longitude"] is None:
+      return None
+
+    # create crash
+    try:
+      crash = Crash(dateutil.parser.parse(obj["date"]), float(obj["latitude"]),
+                    float(obj["longitude"]));
+    except ValueError as err:
+      print "Crash Decode Error: " + str(err.args)
+      return None
+
+    # add victims
     for v in obj["victims"]:
-      crash.victims.append(Victim(v["first"], v["last"], int(v["age"])))
-    for t in obj["tags"]:
-      crash.tags.append(Tag(t))
-    for l in obj["links"]:
-      crash.links.append(Link(l["name"], l["link"]))
+      # check for required fields in a victim
+      if "first" in v and "last" in v and "age" in v and v["age"] is not None:
+        try:
+          crash.victims.append(Victim(v["first"], v["last"], int(v["age"])))
+        except ValueError as err:
+          print "Victim Decode Error: " + str(err.args)
+    # crash cannot have zero victims
+    if len(crash.victims) == 0:
+      return None
+
+    # add tags
+    if "tags" in obj:
+      for t in obj["tags"]:
+        try:
+          crash.tags.append(Tag(t))
+        except ValueError as err:
+          print "Tag Decode Error: " + str(err.args)
+
+    # add links
+    if "links" in obj:
+      for l in obj["links"]:
+        if "name" in l and "link" in l:
+          try:
+            crash.links.append(Link(l["name"], l["link"]))
+          except ValueError as err:
+            print "Link Decode Error: " + str(err.args)
+
     return crash
     
 class Crash(db.Model):
@@ -84,6 +123,8 @@ class Crash(db.Model):
   tags = db.relationship("Tag", cascade="all, delete-orphan")
 
   def __init__(self, datetime, latitude, longitude):
+    if datetime is None or latitude == 0 or longitude == 0:
+      raise ValueError("Wrong parameter for Crash.")
     self.date = datetime
     self.latitude = latitude
     self.longitude = longitude
@@ -115,6 +156,9 @@ class Victim(db.Model):
   crash_id = db.Column(db.Integer, db.ForeignKey("crashes.id"))
 
   def __init__(self, first, last, age):
+    if first is None or last is None \
+        or len(first) == 0 or len(last) == 0:
+      raise ValueError("Wrong parameter for Victim.")
     self.first = first
     self.last = last
     self.age = age
@@ -143,6 +187,9 @@ class Link(db.Model):
   crash_id = db.Column(db.Integer, db.ForeignKey("crashes.id"))
 
   def __init__(self, name, link):
+    if name is None or link is None \
+        or len(link) == 0 or len(name) == 0:
+      raise ValueError("Wrong parameter for Link.")
     self.name = name
     self.link = link
 
@@ -164,6 +211,8 @@ class Tag(db.Model):
   crash_id = db.Column(db.Integer, db.ForeignKey("crashes.id"))
 
   def __init__(self, name):
+    if name is None or len(name) == 0:
+      raise ValueError("Wrong parameter for Tag.")
     self.name = name
 
   def __repr__(self):
