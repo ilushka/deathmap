@@ -104,8 +104,8 @@ def edit(crash_id=None):
   crash = db.session.query(Crash).get(crash_id);
   return render_template("add.html", crash=crash)
 
-@app.route("/crash", methods=["POST"])
-@app.route("/crash/<crash_id>", methods=["POST"])
+@app.route("/crash/add", methods=["POST"])
+@app.route("/crash/<crash_id>/edit", methods=["POST"])
 @login_required
 def crash_add(crash_id=None):
   print "POST /crash " + str(request.json)
