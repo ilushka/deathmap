@@ -123,7 +123,8 @@ class Crash(db.Model):
   links = db.relationship("Link", backref="crashes",
                           cascade="all, delete-orphan")
   tags = db.relationship("Tag", cascade="all, delete-orphan")
-  created_by = db.relationship("CreatedBy", cascade="all, delete-orphan")
+  created_by = db.relationship("CreatedBy", backref="crash",
+                               cascade="all, delete-orphan")
 
   def __init__(self, datetime, latitude, longitude):
     if datetime is None or latitude == 0 or longitude == 0:
@@ -236,7 +237,8 @@ class User(db.Model):
   email = db.Column(db.String(254))
   password_hash = db.Column(db.String(192))
   info = db.Column(JSONData())
-  created_by = db.relationship("CreatedBy", cascade="all, delete-orphan")
+  created_by = db.relationship("CreatedBy", backref="user",
+                               cascade="all, delete-orphan")
 
   def __init__(self, username, first, last, email, password_hash, info):
     self.username = username
@@ -257,8 +259,6 @@ class CreatedBy(db.Model):
   id = db.Column(db.Integer, primary_key=True)
   user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
   crash_id = db.Column(db.Integer, db.ForeignKey("crashes.id"))
-  user = db.relationship("User", cascade="")
-  crash = db.relationship("Crash", cascade="")
   
   def __init__(self, _user, _crash):
     self.user = _user
