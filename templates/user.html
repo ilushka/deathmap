@@ -28,13 +28,18 @@
     <form id="settings-form" class="form-horizontal" method="post">
       <!-- Profile -->
       <div id="profile-container">
-        {{ profile(current_user) }}
+        {{ profile(current_dbuser) }}
       </div>
 
       <!-- Password -->
       <div id="password-container">
-        {{ password(current_user) }}
+        {{ password(current_dbuser) }}
       </div>
+
+      {# TODO: print out crashes by the user:
+        % for cb in current_dbuser.created_by %}
+        {{ cb.crash.date }}
+      {% endfor %#}
 
       <!-- Update button -->
       <div class="form-group form-group-lg">

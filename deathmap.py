@@ -4,7 +4,7 @@ from flask.ext.login import LoginManager, login_user, logout_user, UserMixin, lo
 from werkzeug.security import generate_password_hash, check_password_hash
 import datetime
 import os
-from deathdb import db, CrashEncoder, CrashDecoder, Crash, Victim, Link, Tag, User
+from deathdb import db, CrashEncoder, CrashDecoder, Crash, Victim, Link, Tag, User, CreatedBy
 
 # NOTE: LanterneUser's id must be unicode
 class DeathmapUser(UserMixin):
@@ -120,6 +120,9 @@ def crash_add(crash_id=None):
     crash.update_crash(new_crash)
   else:
     # add new crash
+    user = db.session.query(User).filter_by(username=current_user.id).first()
+    cb = CreatedBy(user, new_crash)
+    db.session.add(cb)
     db.session.add(new_crash)
   db.session.commit()
 
@@ -153,31 +156,31 @@ def login():
 @app.route("/user", methods=["GET", "POST"])
 @login_required
 def user():
-  if request.method == "POST":
-    user = db.session.query(User).filter_by(username=current_user.id).first()
-    if user is None:
-      abort(401)
+  dbuser = db.session.query(User).filter_by(username=current_user.id).first()
+  if dbuser is None:
+    abort(401)
 
+  if request.method == "POST":
     # update first name
     if "firstname" in request.form:
-      user.first = request.form["firstname"]
+      dbuser.first = request.form["firstname"]
     # update last name
     if "lastname" in request.form:
-      user.last = request.form["lastname"]
+      dbuser.last = request.form["lastname"]
     # update twitter
     if "twitter" in request.form:
-      user.update_info({"twitter": request.form["twitter"]})
+      dbuser.update_info({"twitter": request.form["twitter"]})
     # change password
     if "old-password" in request.form \
         and "new-password" in request.form:
       # check old password
       if current_user.check_password(request.form["old-password"]):
         current_user.set_password(request.form["new-password"])
-        user.password_hash = current_user.pw_hash
+        dbuser.password_hash = current_user.pw_hash
 
     db.session.commit()
 
-  return render_template("user.html")
+  return render_template("user.html", current_dbuser=dbuser)
 
 @app.route("/logout")
 @login_required

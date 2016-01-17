@@ -15,6 +15,7 @@
           <th>Longitude</th>
           <th>Links</th>
           <th>Tags</th>
+          <th>Created by</th>
         </tr>
       </thead>
       <tbody id="list-tbody">
@@ -37,6 +38,11 @@
             <td>
               {% for t in c.tags %}
                 {{ t.name }}
+              {% endfor %}
+            </td>
+            <td>
+              {% for cb in c.created_by %}
+                {{ cb.user.username }}
               {% endfor %}
             </td>
           </tr>
