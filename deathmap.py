@@ -80,12 +80,14 @@ ORDER = {
 def home():
   return render_template("home.html")
 
-@app.route("/crash/<crash_id>")
-@app.route("/crash/<crash_id>/<out_type>")
+@app.route("/crash/", methods=["GET"])
+@app.route("/crash/<crash_id>/", methods=["GET"])
+@app.route("/crash/<crash_id>/<out_type>/", methods=["GET"])
 def crash(crash_id=None, out_type="json"):
-  order = ORDER.get(request.args.get('order'), ORDER.get("id"))
-  crashes = Crash.query.order_by(order)
+  # return all crashes
   if str(crash_id) == "all":
+    order = ORDER.get(request.args.get('order'), ORDER.get("id"))
+    crashes = Crash.query.order_by(order)
     if str(out_type) == "json":
       return Response(response=json.dumps(crashes.all(), cls=CrashEncoder),
                       status=200,
@@ -93,32 +95,37 @@ def crash(crash_id=None, out_type="json"):
     elif str(out_type) == "html":
       return render_template("list.html", crashes=crashes)
 
-@app.route("/crash/add")
-@login_required
-def add():
-  return render_template("add.html")
+  # return edit page for specific crash
+  elif crash_id is not None:
+    try:
+      crash = db.session.query(Crash).get(int(crash_id));
+    except ValueError:
+      crash = None
+    if crash is None:
+      abort(400)
+    return render_template("add.html", crash=crash)
 
-@app.route("/crash/<crash_id>/edit")
-@login_required
-def edit(crash_id=None):
-  crash = db.session.query(Crash).get(crash_id);
-  return render_template("add.html", crash=crash)
+  # return add crash page
+  if crash_id is None:
+    return render_template("add.html")
 
-@app.route("/crash/add", methods=["POST"])
-@app.route("/crash/<crash_id>/edit", methods=["POST"])
+@app.route("/crash/", methods=["POST"])
+@app.route("/crash/<crash_id>/", methods=["POST"])
+@app.route("/crash/<crash_id>/<out_type>/", methods=["POST"])
 @login_required
-def crash_add(crash_id=None):
+def edit(crash_id=None, out_type="json"):
   new_crash = CrashDecoder().decode(request.json)
   if new_crash is None:
     print "Failed to decode request.json"
     abort(400)
 
+  # retrieve and update crash
   if crash_id:
-    # retrieve and update crash
     crash = db.session.query(Crash).get(crash_id);
     crash.update_crash(new_crash)
+
+  # add new crash
   else:
-    # add new crash
     dbuser = db.session.query(User).filter_by(username=current_user.id).first()
     cb = CreatedBy(dbuser, new_crash)
     db.session.add(cb)

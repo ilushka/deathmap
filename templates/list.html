@@ -21,7 +21,7 @@
       <tbody id="list-tbody">
         {% for c in crashes %}
           <tr>
-            <td><a href='/crash/{{ c.id }}/edit'>{{ c.id }}</a></td>
+            <td><a href='/crash/{{ c.id }}/'>{{ c.id }}</a></td>
             <td>
               {% for v in c.victims %}
                 {{ v.first }} {{ v.last }} ({{ v.age }})
