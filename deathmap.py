@@ -30,21 +30,21 @@ class DeathmapUser(UserMixin):
     def check_password(self, password):
         return check_password_hash(self.pw_hash, password)
 
-def duser_to_user(duser):
-  return User(username=duser.id,
-              first=duser.first,
-              last=duser.last,
-              email=duser.email,
-              password_hash=duser.pw_hash,
-              info=duser.info)
+def user_to_dbuser(user):
+  return User(username=user.id,
+              first=user.first,
+              last=ser.last,
+              email=user.email,
+              password_hash=user.pw_hash,
+              info=user.info)
 
-def user_to_duser(user):
-  return DeathmapUser(username=user.username,
-                      first=user.first,
-                      last=user.last,
-                      email=user.email,
-                      info=user.info,
-                      password_hash=user.password_hash)
+def dbuser_to_user(dbuser):
+  return DeathmapUser(username=dbuser.username,
+                      first=dbuser.first,
+                      last=dbuser.last,
+                      email=dbuser.email,
+                      info=dbuser.info,
+                      password_hash=dbuser.password_hash)
 
 app = Flask(__name__)
 app.debug = True
@@ -66,10 +66,10 @@ db.init_app(app)
 
 @login_manager.user_loader
 def load_user(id):
-    user = User.query.filter_by(username=id).first()
-    if user is None:
+    dbuser = User.query.filter_by(username=id).first()
+    if dbuser is None:
       return None
-    return user_to_duser(user)
+    return dbuser_to_user(dbuser)
 
 ORDER = {
   "id": Crash.id,
@@ -108,10 +108,9 @@ def edit(crash_id=None):
 @app.route("/crash/<crash_id>/edit", methods=["POST"])
 @login_required
 def crash_add(crash_id=None):
-  print "POST /crash " + str(request.json)
-
   new_crash = CrashDecoder().decode(request.json)
   if new_crash is None:
+    print "Failed to decode request.json"
     abort(400)
 
   if crash_id:
@@ -120,8 +119,8 @@ def crash_add(crash_id=None):
     crash.update_crash(new_crash)
   else:
     # add new crash
-    user = db.session.query(User).filter_by(username=current_user.id).first()
-    cb = CreatedBy(user, new_crash)
+    dbuser = db.session.query(User).filter_by(username=current_user.id).first()
+    cb = CreatedBy(dbuser, new_crash)
     db.session.add(cb)
     db.session.add(new_crash)
   db.session.commit()
@@ -135,13 +134,13 @@ def login():
       and "password" in request.form:
     name = request.form["username"]
     password = request.form["password"]
-    duser = load_user(name)
+    user = load_user(name)
 
-    if duser is None:
+    if user is None:
       flash("Invalid username.")
     else:
-      if duser.check_password(password):
-        login_user(duser)
+      if user.check_password(password):
+        login_user(user)
         flash("Logged in!")
         if request.args.get("next") is not None:
           return redirect(request.args.get("next"))

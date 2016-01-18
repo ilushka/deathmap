@@ -63,7 +63,8 @@ class CrashEncoder(Flask.json_encoder):
 class CrashDecoder(Flask.json_decoder):
   def decode(self, obj):
     # check for required fields
-    if "date" not in obj \
+    if obj is None \
+        or "date" not in obj \
         or "latitude" not in obj \
         or "longitude" not in obj \
         or "victims" not in obj \

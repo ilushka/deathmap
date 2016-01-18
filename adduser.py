@@ -11,13 +11,13 @@ INFO      = {"twitter": "jibberboosh"}
 with app.app_context():
   db.create_all()
 
-  duser = DeathmapUser(username=USERNAME,
+  user = DeathmapUser(username=USERNAME,
                        first=FIRST,
                        last=LAST,
                        email=EMAIL,
                        info=INFO,
                        password=PASSWORD)
-  user = duser_to_user(duser)
-  db.session.add(user)
+  dbuser = user_to_dbuser(user)
+  db.session.add(dbuser)
   db.session.commit()
 
