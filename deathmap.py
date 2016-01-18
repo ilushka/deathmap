@@ -103,11 +103,11 @@ def crash(crash_id=None, out_type="json"):
       crash = None
     if crash is None:
       abort(400)
-    return render_template("add.html", crash=crash)
+    return render_template("crash.html", crash=crash)
 
   # return add crash page
   if crash_id is None:
-    return render_template("add.html")
+    return render_template("crash.html")
 
 @app.route("/crash/", methods=["POST"])
 @app.route("/crash/<crash_id>/", methods=["POST"])
@@ -123,7 +123,6 @@ def edit(crash_id=None, out_type="json"):
   if crash_id:
     crash = db.session.query(Crash).get(crash_id);
     crash.update_crash(new_crash)
-
   # add new crash
   else:
     dbuser = db.session.query(User).filter_by(username=current_user.id).first()
