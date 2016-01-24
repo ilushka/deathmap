@@ -4,7 +4,7 @@ from flask.ext.login import LoginManager, login_user, logout_user, UserMixin, lo
 from werkzeug.security import generate_password_hash, check_password_hash
 import datetime
 import os
-from deathdb import db, CrashEncoder, CrashDecoder, Crash, Victim, Link, Tag, User, CreatedBy
+from deathdb import db, CrashEncoder, CrashDecoder, Crash, Victim, Link, Tag, User, CreatedBy, UserDecoder
 
 # NOTE: LanterneUser's id must be unicode
 class DeathmapUser(UserMixin):
@@ -122,7 +122,7 @@ def edit(crash_id=None, out_type="json"):
   # retrieve and update crash
   if crash_id:
     crash = db.session.query(Crash).get(crash_id);
-    crash.update_crash(new_crash)
+    crash.update_with_crash(new_crash)
   # add new crash
   else:
     dbuser = db.session.query(User).filter_by(username=current_user.id).first()
@@ -166,24 +166,23 @@ def user():
     abort(401)
 
   if request.method == "POST":
-    # update first name
-    if "firstname" in request.form:
-      dbuser.first = request.form["firstname"]
-    # update last name
-    if "lastname" in request.form:
-      dbuser.last = request.form["lastname"]
-    # update twitter
-    if "twitter" in request.form:
-      dbuser.update_info({"twitter": request.form["twitter"]})
+    # update user info
+    new_user = UserDecoder().decode(request.json)
+    if new_user is None:
+      print "Failed to decode request.json"
+      abort(400)
+    dbuser.update_with_user(new_user)
+
     # change password
-    if "old-password" in request.form \
-        and "new-password" in request.form:
+    if len(request.json.get("oldpassword", "")) > 0 \
+        and len(request.json.get("newpassword", "")) > 0:
       # check old password
-      if current_user.check_password(request.form["old-password"]):
-        current_user.set_password(request.form["new-password"])
+      if current_user.check_password(request.json["oldpassword"]):
+        current_user.set_password(request.json["newpassword"])
         dbuser.password_hash = current_user.pw_hash
 
     db.session.commit()
+    return jsonify({})
 
   return render_template("user.html", current_dbuser=dbuser)
 
