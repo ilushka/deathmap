@@ -64,13 +64,10 @@ class CrashDecoder(Flask.json_decoder):
   def decode(self, obj):
     # check for required fields
     if obj is None \
-        or "date" not in obj \
-        or "latitude" not in obj \
-        or "longitude" not in obj \
-        or "victims" not in obj \
-        or len(obj["victims"]) == 0 \
-        or obj["latitude"] is None \
-        or obj["longitude"] is None:
+        or obj.get("date") is None \
+        or obj.get("latitude") is None \
+        or obj.get("longitude") is None \
+        or len(obj.get("victims", [])) == 0:
       return None
 
     # create crash
@@ -111,7 +108,28 @@ class CrashDecoder(Flask.json_decoder):
             print "Link Decode Error: " + str(err.args)
 
     return crash
-    
+
+    self.username = username
+    self.first = first
+    self.last = last
+    self.email = email
+    self.password_hash = password_hash
+    self.info = info
+
+class UserDecoder(Flask.json_decoder):
+  def decode(self, obj):
+    # check for required fields
+    if obj is None \
+        or len(obj.get("first", "")) == 0 \
+        or len(obj.get("last", "")) == 0:
+      return None
+
+    info = {}
+    if obj.get("twitter") != None:
+      info["twitter"] = obj["twitter"]
+
+    return User(None, obj["first"], obj["last"], None, None, info)
+   
 class Crash(db.Model):
   __tablename__ = "crashes"
 
@@ -137,7 +155,7 @@ class Crash(db.Model):
   def __repr__(self):
     return "<Crash %d %s %f %f>" % (self.id, self.date, self.latitude, self.longitude)
 
-  def update_crash(self, other):
+  def update_with_crash(self, other):
     if self.date != other.date:
       self.date = other.date
     if self.latitude != other.latitude:
@@ -250,9 +268,18 @@ class User(db.Model):
     self.info = info
 
   def update_info(self, info):
+    """ merge two infos """
+    # copy current info dictionary
     self.info = dict(self.info)
     for k, v in info.iteritems():
       self.info[k] = v
+
+  def update_with_user(self, other):
+    """ update this user obj with data from other obj """
+    self.first = other.first
+    self.last = other.last
+    if other.info is not None:
+      self.update_info(other.info)
 
 class CreatedBy(db.Model):
   __tablename__ = "createdby"
@@ -264,3 +291,4 @@ class CreatedBy(db.Model):
   def __init__(self, _user, _crash):
     self.user = _user
     self.crash = _crash
+
