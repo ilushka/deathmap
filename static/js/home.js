@@ -53,6 +53,9 @@ function initMap() {
     return content.prop("outerHTML");
   };
 
+  // map icon 
+  var icon = new google.maps.MarkerImage("static/img/dot.png", null, null,
+                                         null, new google.maps.Size(11, 11));
   $.ajax({url: "/crash/all/json"})
     .done(function(crashes) {
       var infowindow = new google.maps.InfoWindow();
@@ -62,7 +65,8 @@ function initMap() {
               position: { lat: crash.latitude, lng: crash.longitude },
               map: map,
               title: crash.victims[0].first,
-              crash: crash
+              crash: crash,
+              icon: icon
             });
 
         marker.addListener("click",
