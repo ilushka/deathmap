@@ -64,6 +64,9 @@ $(document).ready(function () {
     crash.date = $(".date-input").first().val();
     crash.latitude = $(".latitude-input").first().val();
     crash.longitude = $(".longitude-input").first().val();
+    crash.city = $(".city-input").first().val();
+    crash.state = $(".state-input").first().val();
+    crash.zipcode = $(".zipcode-input").first().val();
 
     $.ajax({
       type: "POST",

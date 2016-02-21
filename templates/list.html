@@ -13,6 +13,9 @@
           <th>Date</th>
           <th>Latitude</th>
           <th>Longitude</th>
+          <th>City</th>
+          <th>State</th>
+          <th>Zipcode</th>
           <th>Links</th>
           <th>Tags</th>
           <th>Created by</th>
@@ -30,6 +33,9 @@
             <td>{{ c.date }}</td>
             <td>{{ c.latitude }}</td>
             <td>{{ c.longitude }}</td>
+            <td>{{ c.city }}</td>
+            <td>{{ c.state }}</td>
+            <td>{{ c.zipcode }}</td>
             <td>
               {% for l in c.links %}
                 <a href="{{ l.link }}" target="_blank">{{ loop.index }}</a>

@@ -58,6 +58,9 @@ class CrashEncoder(Flask.json_encoder):
     obj["latitude"] = crash.latitude
     obj["longitude"] = crash.longitude
     obj["id"] = crash.id
+    obj["city"] = crash.city
+    obj["state"] = crash.state
+    obj["zipcode"] = crash.zipcode
     return obj
 
 class CrashDecoder(Flask.json_decoder):
@@ -67,30 +70,32 @@ class CrashDecoder(Flask.json_decoder):
         or obj.get("date") is None \
         or obj.get("latitude") is None \
         or obj.get("longitude") is None \
+        or obj.get("zipcode", 0) == 0 \
+        or len(obj.get("city", "")) == 0 \
+        or len(obj.get("state", "")) == 0 \
         or len(obj.get("victims", [])) == 0:
       return None
 
     # create crash
     try:
       crash = Crash(dateutil.parser.parse(obj["date"]), float(obj["latitude"]),
-                    float(obj["longitude"]));
+                    float(obj["longitude"]), obj["city"], obj["state"], obj["zipcode"]);
     except ValueError as err:
       print "Crash Decode Error: " + str(err.args)
       return None
 
-    # add victims
+    # add victims (required)
     for v in obj["victims"]:
       # check for required fields in a victim
-      if "first" in v and "last" in v and "age" in v and v["age"] is not None:
-        try:
-          crash.victims.append(Victim(v["first"], v["last"], int(v["age"])))
-        except ValueError as err:
-          print "Victim Decode Error: " + str(err.args)
+      try:
+        crash.victims.append(Victim(v["first"], v["last"], int(v["age"])))
+      except ValueError as err:
+        print "Victim Decode Error: " + str(err.args)
     # crash cannot have zero victims
     if len(crash.victims) == 0:
       return None
 
-    # add tags
+    # add tags (optional)
     if "tags" in obj:
       for t in obj["tags"]:
         try:
@@ -98,23 +103,15 @@ class CrashDecoder(Flask.json_decoder):
         except ValueError as err:
           print "Tag Decode Error: " + str(err.args)
 
-    # add links
+    # add links (optional)
     if "links" in obj:
       for l in obj["links"]:
-        if "name" in l and "link" in l:
-          try:
-            crash.links.append(Link(l["name"], l["link"]))
-          except ValueError as err:
-            print "Link Decode Error: " + str(err.args)
+        try:
+          crash.links.append(Link(l["name"], l["link"]))
+        except ValueError as err:
+          print "Link Decode Error: " + str(err.args)
 
     return crash
-
-    self.username = username
-    self.first = first
-    self.last = last
-    self.email = email
-    self.password_hash = password_hash
-    self.info = info
 
 class UserDecoder(Flask.json_decoder):
   def decode(self, obj):
@@ -144,24 +141,38 @@ class Crash(db.Model):
   tags = db.relationship("Tag", cascade="all, delete-orphan")
   created_by = db.relationship("CreatedBy", backref="crash",
                                cascade="all, delete-orphan")
+  city = db.Column(db.String(128))
+  state = db.Column(db.String(64))
+  zipcode = db.Column(db.Integer)
 
-  def __init__(self, datetime, latitude, longitude):
-    if datetime is None or latitude == 0 or longitude == 0:
+  def __init__(self, datetime, latitude, longitude, city, state, zipcode):
+    if datetime is None or latitude == 0 or longitude == 0 \
+        or city is None or state is None or zipcode == 0:
       raise ValueError("Wrong parameter for Crash.")
     self.date = datetime
     self.latitude = latitude
     self.longitude = longitude
+    self.city = city
+    self.state = state
+    self.zipcode = zipcode
 
   def __repr__(self):
     return "<Crash %d %s %f %f>" % (self.id, self.date, self.latitude, self.longitude)
 
   def update_with_crash(self, other):
+    # record column change ony if necessary
     if self.date != other.date:
       self.date = other.date
     if self.latitude != other.latitude:
       self.latitude = other.latitude
     if self.longitude != other.longitude:
       self.longitude = other.longitude
+    if self.city != other.city:
+      self.city = other.city
+    if self.state != other.state:
+      self.state = other.state
+    if self.zipcode != other.zipcode:
+      self.zipcode = other.zipcode
     list_intersection_update(self.victims, other.victims)
     list_update(self.victims, other.victims)
     list_intersection_update(self.tags, other.tags)

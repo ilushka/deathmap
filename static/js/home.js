@@ -48,6 +48,7 @@ function initMap() {
           .slice(0, -2);
     content.append("<b>Victims:</b> " + victims + "<br />");
     content.append("<b>Date:</b> " + crash.date + "<br />");
+    content.append("<b>Location:</b> " + crash.city + ", " + crash.state + "<br />");
     content.append("<b>Links:</b> " + links + "<br />");
     content.append("<b>Tags:</b> " + tags + "<br />");
     return content.prop("outerHTML");

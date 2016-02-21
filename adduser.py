@@ -1,4 +1,4 @@
-from deathmap import db, app, DeathmapUser, duser_to_user, user_to_duser
+from deathmap import db, app, DeathmapUser, user_to_dbuser, dbuser_to_user
 from deathdb import User
 
 USERNAME  = "ilushka"

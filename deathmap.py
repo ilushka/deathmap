@@ -33,7 +33,7 @@ class DeathmapUser(UserMixin):
 def user_to_dbuser(user):
   return User(username=user.id,
               first=user.first,
-              last=ser.last,
+              last=user.last,
               email=user.email,
               password_hash=user.pw_hash,
               info=user.info)
@@ -83,6 +83,7 @@ def home():
 @app.route("/crash/", methods=["GET"])
 @app.route("/crash/<crash_id>/", methods=["GET"])
 @app.route("/crash/<crash_id>/<out_type>/", methods=["GET"])
+@login_required
 def crash(crash_id=None, out_type="json"):
   # return all crashes
   if str(crash_id) == "all":
