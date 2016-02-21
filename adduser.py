@@ -1,7 +1,7 @@
 from deathmap import db, app, DeathmapUser, user_to_dbuser, dbuser_to_user
 from deathdb import User
 
-USERNAME  = "ilushka"
+USERNAME  = "ilya"
 PASSWORD  = "password123"
 FIRST     = "ilya"
 LAST      = "moskovko"
