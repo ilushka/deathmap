@@ -8,7 +8,9 @@
     <table class="table table-striped">
       <thead>
         <tr>
-          <th>id</th>
+          {% if current_user.is_authenticated %}
+            <th>id</th>
+          {% endif %}
           <th>Victims</th>
           <th>Date</th>
           <th>Latitude</th>
@@ -18,13 +20,17 @@
           <th>Zipcode</th>
           <th>Links</th>
           <th>Tags</th>
-          <th>Created by</th>
+          {% if current_user.is_authenticated %}
+            <th>Created by</th>
+          {% endif %}
         </tr>
       </thead>
       <tbody id="list-tbody">
         {% for c in crashes %}
           <tr>
-            <td><a href='/crash/{{ c.id }}/'>{{ c.id }}</a></td>
+            {% if current_user.is_authenticated %}
+              <td><a href='/crash/{{ c.id }}/'>{{ c.id }}</a></td>
+            {% endif %}
             <td>
               {% for v in c.victims %}
                 {{ v.first }} {{ v.last }} ({{ v.age }})
@@ -46,11 +52,13 @@
                 {{ t.name }}
               {% endfor %}
             </td>
-            <td>
-              {% for cb in c.created_by %}
-                {{ cb.user.username }}
-              {% endfor %}
-            </td>
+            {% if current_user.is_authenticated %}
+              <td>
+                {% for cb in c.created_by %}
+                  {{ cb.user.username }}
+                {% endfor %}
+              </td>
+            {% endif %}
           </tr>
         {% endfor %}
       </tbody>

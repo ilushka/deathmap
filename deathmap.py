@@ -5,6 +5,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import datetime
 import os
 from deathdb import db, CrashEncoder, CrashDecoder, Crash, Victim, Link, Tag, User, CreatedBy, UserDecoder
+from functools import wraps
 
 # NOTE: LanterneUser's id must be unicode
 class DeathmapUser(UserMixin):
@@ -29,6 +30,17 @@ class DeathmapUser(UserMixin):
 
     def check_password(self, password):
         return check_password_hash(self.pw_hash, password)
+
+def login_required_if(is_true):
+  def decorator(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if is_true(args, kwargs):
+          if current_user is None or not current_user.is_authenticated:
+              return redirect(url_for('login', next=request.url))
+        return f(*args, **kwargs)
+    return decorated_function
+  return decorator
 
 def user_to_dbuser(user):
   return User(username=user.id,
@@ -83,7 +95,7 @@ def home():
 @app.route("/crash/", methods=["GET"])
 @app.route("/crash/<crash_id>/", methods=["GET"])
 @app.route("/crash/<crash_id>/<out_type>/", methods=["GET"])
-@login_required
+@login_required_if(lambda a, k: not (k.get("crash_id", None) == "all"))
 def crash(crash_id=None, out_type="json"):
   # return all crashes
   if str(crash_id) == "all":
