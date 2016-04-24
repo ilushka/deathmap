@@ -60,6 +60,7 @@
         {{ lib.panel_input("State", "state-input", value=crash.state) }}
         {{ lib.panel_input("Zipcode", "zipcode-input", value=crash.zipcode,
                            type="number") }}
+        {{ lib.panel_input("Search...", "search-input") }}
       {% else %}
         {{ lib.panel_input("Date", "date-input", type="datetime-local") }}
         {{ lib.panel_input("Latitude", "latitude-input", type="number") }}
@@ -67,6 +68,7 @@
         {{ lib.panel_input("City", "city-input") }}
         {{ lib.panel_input("State", "state-input") }}
         {{ lib.panel_input("Zipcode", "zipcode-input", type="number") }}
+        {{ lib.panel_input("Search...", "search-input") }}
       {% endif %}
       <div id="map"></div>
   {% endcall %}
@@ -131,7 +133,7 @@
     src="{{ url_for('static', filename='js/crash.js') }}">
   </script>
   <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCNR_PQxoUtbFLRaLGV3NNZIq7sjqKojYA&callback=initMap">
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCNR_PQxoUtbFLRaLGV3NNZIq7sjqKojYA&callback=initMap&libraries=places">
   </script>
 {% endblock %}
 

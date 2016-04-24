@@ -95,9 +95,13 @@ function initMap() {
         map: map
       });
     },
-    latitude,
-    longitude;
+    latitude, longitude,
+    // create search box
+    searchInput = $(".search-input").get(0),
+    searchBox = new google.maps.places.SearchBox(searchInput),
+    geocoder = new google.maps.Geocoder;
 
+  // process lat & long
   latitude = parseFloat($(".latitude-input").first().val());
   longitude = parseFloat($(".longitude-input").first().val());
   if (isNaN(latitude) || isNaN(longitude)) {
@@ -106,6 +110,7 @@ function initMap() {
     longitude = -122.1; 
   }
 
+  // create map
   map = new google.maps.Map(document.getElementById("map"), {
     center: {
       lat: latitude,
@@ -120,15 +125,67 @@ function initMap() {
     overviewMapControl: false
   });
 
+  // initialize places web service
+  placesService = new google.maps.places.PlacesService(map);
+
+  // add search box listener
+  searchBox.addListener("places_changed", function() {
+    var places = searchBox.getPlaces();
+    if (places.length != 0) {
+      map.panTo(places[0].geometry.location);
+    }
+  });
+
   if (latitude != 37.5 || longitude != -122.1) {
     // add marker for edit mode
     addMarker(latitude, longitude);
   }
 
+  // listener for clicking on map
   map.addListener('click', function(event) {
-    $(".latitude-input").first().val(event.latLng.lat());
-    $(".longitude-input").first().val(event.latLng.lng());
-    addMarker(event.latLng.lat(), event.latLng.lng());
+    var lat = event.latLng.lat(),
+        lng = event.latLng.lng(),
+        latLng = {lat: lat, lng: lng};
+
+    $(".latitude-input").first().val(lat);
+    $(".longitude-input").first().val(lng);
+    addMarker(lat, lng);
+
+    // retrieve info for the coordinates
+    geocoder.geocode( {"location": latLng}, function(results, status) {
+      var attrb = null,
+          type = null,
+          place = null,
+          city = null,
+          zipcode = null,
+          state = null;
+
+      if (results.length != 0) {
+        place = results[0];
+        for (var ii = 0; ii < place.address_components.length; ii++) {
+          attrb = place.address_components[ii];
+          for (var jj = 0; jj < attrb.types.length; jj++) {
+            type = attrb.types[jj];
+
+            if (!type.localeCompare("postal_code")) {
+              zipcode = attrb.long_name;
+            } else if (!type.localeCompare("locality")) {
+              city = attrb.long_name;
+            } else if (!type.localeCompare("administrative_area_level_1")) {
+              state = attrb.short_name;
+            } else if (!type.localeCompare("sublocality_level_1")) {
+              if (city == null) {
+                city = attrb.long_name;
+              }
+            } 
+
+            $(".zipcode-input").first().val(zipcode);
+            $(".city-input").first().val(city);
+            $(".state-input").first().val(state);
+          }
+        }
+      } // if (results.length != 0)
+    });
   });
 }
 
