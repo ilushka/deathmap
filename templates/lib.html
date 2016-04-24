@@ -15,9 +15,9 @@
       <input type="{{ type }}"
              class="form-control {{ class }}"
              placeholder="{{ placeholder }}"
-             {{ "value=" + value|string if value }}
+             {{ 'value="'|safe + value|string + '"'|safe if value }}
              {{ "disabled" if disabled }}
-             {{ "name=" + name|string if name }} >
+             {{ 'name="'|safe + name|string + '"'|safe if name }} />
     </div>
   </div>
 {%- endmacro %}
