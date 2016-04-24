@@ -36,6 +36,8 @@ class JSONData(TypeDecorator):
     return value
 
 class CrashEncoder(Flask.json_encoder):
+  """ Create JSON object form Crash object """
+
   def default(self, crash):
     obj = {}
     obj["victims"] = []
@@ -64,6 +66,8 @@ class CrashEncoder(Flask.json_encoder):
     return obj
 
 class CrashDecoder(Flask.json_decoder):
+  """ Create Crash object from JSON object """
+
   def decode(self, obj):
     # check for required fields
     if obj is None \
