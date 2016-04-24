@@ -25,7 +25,7 @@
 {% macro panel_intr_sml_btn(name, class=None) -%}
   <div class="form-group form-group-lg">
     <div class="col-sm-offset-10 col-sm-2">
-      <button type="submit" class="btn btn-danger btn-xs {{ class }}">{{ name }}</button>
+      <button type="button" class="btn btn-danger btn-xs {{ class }}">{{ name }}</button>
     </div>
   </div>
 {%- endmacro %}
@@ -33,7 +33,7 @@
 {% macro panel_extr_left_sml_btn(name, class=None) -%}
   <div class="form-group form-group-lg">
     <div class="col-sm-1">
-      <button type="submit" class="btn btn-primary btn-xs {{ class }}">{{ name }}</button>
+      <button type="button" class="btn btn-primary btn-xs {{ class }}">{{ name }}</button>
     </div>
   </div>
 {%- endmacro %}
