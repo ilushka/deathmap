@@ -1,5 +1,5 @@
 from flask import Flask, render_template, jsonify, Response, request, json, abort, flash, redirect
-from flash import url_for, jsonify
+from flask import url_for, jsonify
 from flask.ext.bower import Bower
 from flask.ext.login import LoginManager, login_user, logout_user, UserMixin, login_required
 from flask.ext.login import fresh_login_required, current_user
