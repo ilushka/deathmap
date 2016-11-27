@@ -1,0 +1,9 @@
+Victim Age:
+  Basic Age:
+    Expression: |
+        ([0-9][0-9])
+    Description: two-digit age
+    Matches: 12 | 35 | 84
+    Groups:
+      - Age
+
