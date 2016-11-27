@@ -4,6 +4,7 @@ from sqlalchemy.types import TypeDecorator, VARCHAR
 import json
 import dateutil.parser
 
+# NOTE: flask app is set in deathmap.py
 db = SQLAlchemy()
 
 # NOTE: use these list_update functions to record db entry changes
@@ -14,6 +15,7 @@ def list_intersection_update(a, b):
       a.remove(ii)
 
 def list_update(a, b):
+  """ move db entries from list b to list a that are not yet in list a """
   for ii in b:
     if ii not in a:
       # NOTE:
@@ -306,4 +308,31 @@ class CreatedBy(db.Model):
   def __init__(self, _user, _crash):
     self.user = _user
     self.crash = _crash
+
+class Article(db.Model):
+  __tablename__ = "articles"
+
+  id = db.Column(db.Integer, primary_key=True)
+  title = db.Column(db.String(64))
+  link = db.Column(db.String(512))  # TODO: use Link
+
+  def __init__(self, title, link):
+    if title is None or link is None \
+        or len(title) == 0 or len(link) == 0:
+      raise ValueError("Wrong parameter for Article.")
+    self.title = title
+    self.link = link
+
+  def __repr__(self):
+    return "<Article %s %s>" % (self.title, self.link)
+
+  def __eq__(self, other):
+    if self.title != other.title:
+      return False
+    if self.link != other.link:
+      return False
+    return True
+
+  def __hash__(self):
+    return hash(self.link)
 

@@ -206,6 +206,13 @@ def logout():
     flash("Logged out.")
     return redirect(url_for("login"))
 
+@app.route("/articles/", methods=["GET"])
+@login_required
+def articles():
+  # return all articles
+  articles = Article.query.order_by(Article.id)
+  return render_template("articles.html", articles=articles)
+
 if __name__ == "__main__":
   app.run()
 

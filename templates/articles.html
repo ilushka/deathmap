@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block head %}
+{% endblock %}
+
+{% block body %}
+  <div id="list-container" class="container">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Link</th>
+        </tr>
+      </thead>
+      <tbody id="list-tbody">
+        {% for a in articles %}
+          <tr>
+            <td>{{ a.title }}</td>
+            <td>{{ a.link }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}
+
