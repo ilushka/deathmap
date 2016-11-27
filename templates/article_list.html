@@ -10,6 +10,7 @@
         <tr>
           <th>Title</th>
           <th>Link</th>
+          <th></th>
         </tr>
       </thead>
       <tbody id="list-tbody">
@@ -17,6 +18,11 @@
           <tr>
             <td>{{ a.title }}</td>
             <td>{{ a.link }}</td>
+            <td>
+              <form action='/article/{{ a.id }}/' method='post'>
+                <button type="button" class="btn btn-danger btn-xs">del</button>
+              </form>
+            </td>
           </tr>
         {% endfor %}
       </tbody>

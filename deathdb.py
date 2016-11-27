@@ -126,13 +126,20 @@ class UserDecoder(Flask.json_decoder):
         or len(obj.get("first", "")) == 0 \
         or len(obj.get("last", "")) == 0:
       return None
-
     info = {}
     if obj.get("twitter") != None:
       info["twitter"] = obj["twitter"]
-
     return User(None, obj["first"], obj["last"], None, None, info)
-   
+
+class ArticleDecoder(Flask.json_decoder):
+  def decode(self, obj):
+    # check for required fields
+    if obj is None \
+        or len(obj.get("title", "")) == 0 \
+        or len(obj.get("link", "")) == 0:
+      return None
+    return Article(obj["title"], obj["link"])
+  
 class Crash(db.Model):
   __tablename__ = "crashes"
 

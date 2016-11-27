@@ -129,7 +129,7 @@ def crash(crash_id=None, out_type="json"):
 @app.route("/crash/<crash_id>/", methods=["POST"])
 @app.route("/crash/<crash_id>/<out_type>/", methods=["POST"])
 @login_required
-def edit(crash_id=None, out_type="json"):
+def crash_edit(crash_id=None, out_type="json"):
   new_crash = CrashDecoder().decode(request.json)
   if new_crash is None:
     print "Failed to decode request.json"
@@ -209,12 +209,28 @@ def logout():
     flash("Logged out.")
     return redirect(url_for("login"))
 
+@app.route("/article/<article_id>/", methods=["POST"])
+@login_required
+def article_edit(article_id=None):
+  if article_id is None:
+    print "Missing article ID"
+    abort(400)
+
+  new_article = ArticleDecoder().decode(request.json)
+  if new_article is None:
+    # if sent article is empty delete it
+    article = db.session.query(Article).get(article_id);
+    db.session.delete(article)
+    db.session.commit()
+
+  return jsonify({})
+
 @app.route("/articles/", methods=["GET"])
 @login_required
 def articles():
   # return all articles
   articles = Article.query.order_by(Article.id)
-  return render_template("articles.html", articles=articles)
+  return render_template("article_list.html", articles=articles)
 
 if __name__ == "__main__":
   app.run()
