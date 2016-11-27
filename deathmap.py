@@ -2,7 +2,7 @@ from flask import Flask, render_template, jsonify, Response, request, json, abor
 from flash import url_for, jsonify
 from flask.ext.bower import Bower
 from flask.ext.login import LoginManager, login_user, logout_user, UserMixin, login_required
-from flash.ext.login import fresh_login_required, current_user
+from flask.ext.login import fresh_login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from deathdb import db, CrashEncoder, CrashDecoder, Crash, Victim, Link, Tag, User, CreatedBy
 from deathdb import UserDecoder, Article
