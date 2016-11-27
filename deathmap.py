@@ -5,7 +5,7 @@ from flask.ext.login import LoginManager, login_user, logout_user, UserMixin, lo
 from flask.ext.login import fresh_login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from deathdb import db, CrashEncoder, CrashDecoder, Crash, Victim, Link, Tag, User, CreatedBy
-from deathdb import UserDecoder, Article
+from deathdb import UserDecoder, Article, ArticleDecoder
 from functools import wraps
 import datetime
 import os
