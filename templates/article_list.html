@@ -33,7 +33,7 @@
     $(":button").click(function() {
       var id = $(this).attr("article"),
           row = $(this).parent().parent();
-      $.post("/article/" + id, function() {
+      $.post("/article/" + id + "/", function() {
         row.remove();
       });
     });
