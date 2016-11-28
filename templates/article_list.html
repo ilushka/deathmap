@@ -19,9 +19,7 @@
             <td>{{ a.title }}</td>
             <td>{{ a.link }}</td>
             <td>
-              <form action='/article/{{ a.id }}/' method='post'>
-                <button type="submit" class="btn btn-danger btn-xs">del</button>
-              </form>
+              <button type="button" class="btn btn-danger btn-xs" article="{{ a.id }}">del</button>
             </td>
           </tr>
         {% endfor %}
@@ -30,3 +28,11 @@
   </div>
 {% endblock %}
 
+{% block javascript %}
+  <script type="text/javascript">
+    $(":button").click(function() {
+      var id = $(this).attr("article");
+      alert("MONKEY" + id);
+    });
+  </script>
+{% endblock %}
