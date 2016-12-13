@@ -18,3 +18,6 @@ class DeathFeed(object):
   def get_last_post_marker(self):
     return self.marker
 
+  def set_last_post_marker(self, marker):
+    self.marker = marker
+

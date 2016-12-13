@@ -343,3 +343,30 @@ class Article(db.Model):
   def __hash__(self):
     return hash(self.link)
 
+class FeedMarker(db.Model):
+  __tablename__ = "feedmarkers"
+
+  id = db.Column(db.Integer, primary_key=True)
+  feed_name = db.Column(db.String(256))
+  marker = db.Column(db.String(256))
+
+  def __init__(self, feed_name, marker):
+    if feed_name is None or marker is None \
+        or len(feed_name) == 0 or len(marker) == 0:
+      raise ValueError("Wrong parameter for FeedMarker.")
+    self.feed_name = feed_name
+    self.marker = marker
+
+  def __repr__(self):
+    return "<FeedMarker %s %s>" % (self.feed_name, self.marker)
+
+  def __eq__(self, other):
+    if self.feed_name != other.feed_name:
+      return False
+    if self.marker != other.marker:
+      return False
+    return True
+
+  def __hash__(self):
+    return hash(self.feed_name)
+
