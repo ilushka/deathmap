@@ -55,7 +55,7 @@ function drop_database() {
 function heroku_commands() {
     case $1 in
         "push") # heroku-arg;
-            git push heroku master
+            git push heroku $(git rev-parse --abbrev-ref HEAD):master
             ;;
         "dbpush") # heroku-arg;
             heroku pg:push postgresql://deathmap:password@localhost/deathmap DATABASE_URL
