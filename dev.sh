@@ -63,6 +63,9 @@ function heroku_commands() {
         "dbpull") # heroku-arg;
             heroku pg:pull DATABASE_URL postgresql://deathmap:password@localhost/deathmap
             ;;
+        "reset") # heroku-arg;
+            heroku pg:reset DATABASE_URL
+            ;;
     esac
 }
 
