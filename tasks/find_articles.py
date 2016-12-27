@@ -17,7 +17,7 @@ with app.app_context():
     # process all the post since marker
     posts = feed.get_posts()
     for p in posts:
-      print("MONKEY: " + p.title.encode("utf-8") + " " + p.link.encode("utf-8"))
+      print("MONKEY: " + p.title + " " + p.link)
       article = Article(p.title, p.link)
       if not DEBUG:
         db.session.add(article)

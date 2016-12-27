@@ -1,7 +1,7 @@
 class DeathPost(object):
   def __init__(self, title, link, date):
-    self.title = title
-    self.link = link
+    self.title = title.encode("utf-8")
+    self.link = link.encode("utf-8")
     self.date = date
 
 class DeathFeed(object):
