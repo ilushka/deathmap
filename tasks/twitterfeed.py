@@ -22,11 +22,11 @@ class TwitterFeed(DeathFeed):
   def get_posts(self):
     posts = []
     self.timeline = self.api.GetUserTimeline(screen_name=self.feed_name,
-                                             since_id=self.marker,
+                                             since_id=int(self.marker),
                                              include_rts=False)
     for s in self.timeline:
       posts.append(TwitterPost(s))
     if len(posts) > 0:
-      self.marker = posts[0].tweet.id
+      self.marker = str(posts[0].tweet.id)
     return posts
 
