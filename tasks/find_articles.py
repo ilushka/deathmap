@@ -8,8 +8,10 @@ with app.app_context():
   for acc_name in TWITTER_ACCOUNTS:
     # prepare twitter feed
     feed = TwitterFeed("mercnews")
-    dbmarker = db.session.query(FeedMarker).filter_by(FeedMarker.feed_name=feed.get_feed_name()).first()
-    feed.set_last_post_marker(dbmarker.marker)
+    # retrieve stored marker in db
+    dbmarker = db.session.query(FeedMarker).filter_by(feed_name=feed.get_feed_name()).first()
+    if dbmarker is not None;
+      feed.set_last_post_marker(dbmarker.marker)
 
     # process all the post since marker
     posts = feed.get_posts()
