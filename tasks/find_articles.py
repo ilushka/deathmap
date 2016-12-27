@@ -10,7 +10,7 @@ with app.app_context():
     feed = TwitterFeed("mercnews")
     # retrieve stored marker in db
     dbmarker = db.session.query(FeedMarker).filter_by(feed_name=feed.get_feed_name()).first()
-    if dbmarker is not None;
+    if dbmarker is not None:
       feed.set_last_post_marker(dbmarker.marker)
 
     # process all the post since marker
