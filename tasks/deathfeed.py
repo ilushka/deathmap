@@ -7,7 +7,7 @@ class DeathPost(object):
 class DeathFeed(object):
   def __init__(self, feed_name, marker):
     self.feed_name = feed_name
-    self.marker = str(marker)
+    self.marker = marker
 
   def get_posts(self):
     pass
@@ -19,5 +19,5 @@ class DeathFeed(object):
     return self.marker
 
   def set_last_post_marker(self, marker):
-    self.marker = str(marker)
+    self.marker = marker
 
