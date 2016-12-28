@@ -15,7 +15,7 @@ with app.app_context():
       feed.set_last_post_marker(dbmarker.marker)
 
     # process all the post since marker
-    posts = feed.get_posts()
+    posts = reversed(feed.get_posts())  # add oldest posts first
     for p in posts:
       print("MONKEY: " + p.title + " " + p.link)
       article = Article(p.title, p.link)
