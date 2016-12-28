@@ -320,7 +320,7 @@ class Article(db.Model):
   __tablename__ = "articles"
 
   id = db.Column(db.Integer, primary_key=True)
-  title = db.Column(db.String(64))
+  title = db.Column(db.String(256))
   link = db.Column(db.String(512))  # TODO: use Link
 
   def __init__(self, title, link):
