@@ -3,7 +3,7 @@ from deathdb import Article, FeedMarker
 from twitterfeed import TwitterFeed, TwitterPost
 
 TWITTER_ACCOUNTS = ["mercnews"]
-DEBUG = True
+DEBUG = False
 
 with app.app_context():
   for acc_name in TWITTER_ACCOUNTS:
