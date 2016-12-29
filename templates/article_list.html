@@ -17,7 +17,7 @@
         {% for a in articles %}
           <tr>
             <td>{{ a.title }}</td>
-            <td>{{ a.link }}</td>
+            <td><a href="{{a.link}}" target="_blank">{{ a.link }}</a></td>
             <td>
               <button type="button" class="btn btn-danger btn-xs del-article-btn" article="{{ a.id }}">del</button>
             </td>
