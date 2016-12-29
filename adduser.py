@@ -2,7 +2,7 @@ from deathmap import db, app, DeathmapUser, user_to_dbuser, dbuser_to_user
 from deathdb import User
 
 USERNAME  = "ilya"
-PASSWORD  = "password123"
+PASSWORD  = "CREAMcgtmddby"
 FIRST     = "ilya"
 LAST      = "moskovko"
 EMAIL     = "ilya@moskovko.com"

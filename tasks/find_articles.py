@@ -2,7 +2,7 @@ from deathmap import db, app
 from deathdb import Article, FeedMarker
 from twitterfeed import TwitterFeed, TwitterPost
 
-TWITTER_ACCOUNTS = ["mercnews", "sfgate", "eastbaytimes"]
+TWITTER_ACCOUNTS = ["mercnews", "sfgate", "eastbaytimes", "scsentinel"]
 DEBUG = False
 
 with app.app_context():
