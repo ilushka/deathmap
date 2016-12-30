@@ -1,6 +1,5 @@
 import re
 import sys
-print sys.path
 from deathmap import db, app
 from deathdb import Article, FeedMarker
 from twitterfeed import TwitterFeed, TwitterPost
