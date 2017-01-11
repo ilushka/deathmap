@@ -62,7 +62,7 @@ function exec_util() {
         printf "Maybe do: ./dev.sh heroku dburl\n" 
         exit 1
     fi
-    PYTHONPATH="." python 
+    PYTHONPATH="." python ${1}
 }
 
 function heroku_commands() {
