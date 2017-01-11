@@ -1,11 +1,14 @@
-from flask import Flask, render_template, jsonify, Response, request, json, abort, flash, redirect, url_for, jsonify
+from flask import Flask, render_template, jsonify, Response, request, json, abort, flash, redirect
+from flask import url_for, jsonify
 from flask.ext.bower import Bower
-from flask.ext.login import LoginManager, login_user, logout_user, UserMixin, login_required, fresh_login_required, current_user
+from flask.ext.login import LoginManager, login_user, logout_user, UserMixin, login_required
+from flask.ext.login import fresh_login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
+from deathdb import db, CrashEncoder, CrashDecoder, Crash, Victim, Link, Tag, User, CreatedBy
+from deathdb import UserDecoder, Article, ArticleDecoder
+from functools import wraps
 import datetime
 import os
-from deathdb import db, CrashEncoder, CrashDecoder, Crash, Victim, Link, Tag, User, CreatedBy, UserDecoder
-from functools import wraps
 
 # NOTE: LanterneUser's id must be unicode
 class DeathmapUser(UserMixin):
@@ -126,7 +129,7 @@ def crash(crash_id=None, out_type="json"):
 @app.route("/crash/<crash_id>/", methods=["POST"])
 @app.route("/crash/<crash_id>/<out_type>/", methods=["POST"])
 @login_required
-def edit(crash_id=None, out_type="json"):
+def crash_edit(crash_id=None, out_type="json"):
   new_crash = CrashDecoder().decode(request.json)
   if new_crash is None:
     print "Failed to decode request.json"
@@ -205,6 +208,29 @@ def logout():
     logout_user()
     flash("Logged out.")
     return redirect(url_for("login"))
+
+@app.route("/article/<article_id>/", methods=["POST"])
+@login_required
+def article_edit(article_id=None):
+  if article_id is None:
+    print "Missing article ID"
+    abort(400)
+
+  new_article = ArticleDecoder().decode(request.json)
+  if new_article is None:
+    # if sent article is empty delete it
+    article = db.session.query(Article).get(article_id);
+    db.session.delete(article)
+    db.session.commit()
+
+  return jsonify({})
+
+@app.route("/articles/", methods=["GET"])
+@login_required
+def articles():
+  # return all articles
+  articles = Article.query.order_by(Article.id)
+  return render_template("article_list.html", articles=articles)
 
 if __name__ == "__main__":
   app.run()

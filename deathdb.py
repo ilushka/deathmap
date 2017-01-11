@@ -4,6 +4,7 @@ from sqlalchemy.types import TypeDecorator, VARCHAR
 import json
 import dateutil.parser
 
+# NOTE: flask app is set in deathmap.py
 db = SQLAlchemy()
 
 # NOTE: use these list_update functions to record db entry changes
@@ -14,6 +15,7 @@ def list_intersection_update(a, b):
       a.remove(ii)
 
 def list_update(a, b):
+  """ move db entries from list b to list a that are not yet in list a """
   for ii in b:
     if ii not in a:
       # NOTE:
@@ -124,13 +126,20 @@ class UserDecoder(Flask.json_decoder):
         or len(obj.get("first", "")) == 0 \
         or len(obj.get("last", "")) == 0:
       return None
-
     info = {}
     if obj.get("twitter") != None:
       info["twitter"] = obj["twitter"]
-
     return User(None, obj["first"], obj["last"], None, None, info)
-   
+
+class ArticleDecoder(Flask.json_decoder):
+  def decode(self, obj):
+    # check for required fields
+    if obj is None \
+        or len(obj.get("title", "")) == 0 \
+        or len(obj.get("link", "")) == 0:
+      return None
+    return Article(obj["title"], obj["link"])
+  
 class Crash(db.Model):
   __tablename__ = "crashes"
 
@@ -306,4 +315,58 @@ class CreatedBy(db.Model):
   def __init__(self, _user, _crash):
     self.user = _user
     self.crash = _crash
+
+class Article(db.Model):
+  __tablename__ = "articles"
+
+  id = db.Column(db.Integer, primary_key=True)
+  title = db.Column(db.String(256))
+  link = db.Column(db.String(512))  # TODO: use Link
+
+  def __init__(self, title, link):
+    if title is None or link is None \
+        or len(title) == 0 or len(link) == 0:
+      raise ValueError("Wrong parameter for Article.")
+    self.title = title
+    self.link = link
+
+  def __repr__(self):
+    return "<Article %s %s>" % (self.title, self.link)
+
+  def __eq__(self, other):
+    if self.title != other.title:
+      return False
+    if self.link != other.link:
+      return False
+    return True
+
+  def __hash__(self):
+    return hash(self.link)
+
+class FeedMarker(db.Model):
+  __tablename__ = "feedmarkers"
+
+  id = db.Column(db.Integer, primary_key=True)
+  feed_name = db.Column(db.String(256))
+  marker = db.Column(db.String(256))
+
+  def __init__(self, feed_name, marker):
+    if feed_name is None or marker is None \
+        or len(feed_name) == 0 or len(marker) == 0:
+      raise ValueError("Wrong parameter for FeedMarker.")
+    self.feed_name = feed_name
+    self.marker = marker
+
+  def __repr__(self):
+    return "<FeedMarker %s %s>" % (self.feed_name, self.marker)
+
+  def __eq__(self, other):
+    if self.feed_name != other.feed_name:
+      return False
+    if self.marker != other.marker:
+      return False
+    return True
+
+  def __hash__(self):
+    return hash(self.feed_name)
 
