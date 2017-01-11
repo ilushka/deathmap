@@ -52,6 +52,19 @@ function drop_database() {
     psql --command="drop database deathmap;"
 }
 
+function exec_util() {
+    if [ "_${1}" == "_" ]; then
+        printf "Missing utility filename\n" 
+        exit 1
+    fi
+    if [ "_${DATABASE_URL}" == "_" ]; then
+        printf "Missing DATABASE_URL\n" 
+        printf "Maybe do: ./dev.sh heroku dburl\n" 
+        exit 1
+    fi
+    PYTHONPATH="." python 
+}
+
 function heroku_commands() {
     case $1 in
         "push") # heroku-arg;
@@ -87,6 +100,9 @@ case $1 in
         ;;
     "dbdrop") # first-level-arg;
         drop_database
+        ;;
+    "util") # first-level-arg;
+        exec_util "${@:2}"
         ;;
     "help") # first-level-arg;
         show_usage "${@:2}"
