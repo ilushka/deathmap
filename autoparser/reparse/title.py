@@ -1,4 +1,4 @@
-from functions import title_functions
+from title_functions import functions
 import reparse
 import os
 
