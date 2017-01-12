@@ -18,9 +18,9 @@ def _total_weight(matches):
     sum += m.weight
   return sum
 
-def parse_title(title):
+def get_title_weight(title):
   matches = reparse_title(title)
-  if matches is not None and _total_weight(matches) >= WEIGHT_THRESHOLD:
-    return title
-  return None
+  if matches is not None:
+    return _total_weight(matches)
+  return 0
 
