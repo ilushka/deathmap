@@ -4,7 +4,7 @@ import os
 
 WEIGHT_THRESHOLD = 15
 
-path = os.getcwd() + "/"
+path = os.path.dirname(os.path.realpath(__file__)) + "/"
 reparse_title = reparse.parser(
   parser_type = reparse.basic_parser,
   expressions_yaml_path = path + "title_expressions.yml",
