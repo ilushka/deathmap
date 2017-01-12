@@ -323,7 +323,7 @@ class Article(db.Model):
   id = db.Column(db.Integer, primary_key=True)
   title = db.Column(db.String(256))
   link = db.Column(db.String(512))  # TODO: use Link
-  weight = db.Columnt(db.Integer)
+  weight = db.Column(db.Integer)
 
   def __init__(self, title, link, weight=0):
     if title is None or link is None \
