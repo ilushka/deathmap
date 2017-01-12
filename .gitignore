@@ -1,4 +1,5 @@
 deathmap_env
+autoparser_env
 *.pyc
 *.swp
 tags
