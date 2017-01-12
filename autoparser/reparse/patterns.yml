@@ -1,4 +1,24 @@
-Age Year Old:
-  Pattern: <Victim Age>-year-old
+CrashType1:
+  Pattern: <Victim>.*<VictimState>+
   Order: 1
+
+CrashType2:
+  Pattern: <Victim>.*(?:in)?.*<Crash>
+  Order: 2
+
+CrashType3:
+  Pattern: <Crash>.*(?:leaves)?.*<VictimState>
+  Order: 2
+
+CrashType4:
+  Pattern: <Crash>.*<Victim>.*<VictimState>
+  Order: 3
+
+CrashType5:
+  Pattern: <Victim>.*<VictimState>.*(?:in)?.*<Crash>
+  Order: 4
+
+CrashType6:
+  Pattern: <Victim>.*<VictimState>.*(?:in)?.*<Vehicle>
+  Order: 4
 

@@ -1,9 +1,64 @@
-Victim Age:
-  Basic Age:
+Victim:
+  CertainVictim:
     Expression: |
-        ([0-9][0-9])
-    Description: two-digit age
-    Matches: 12 | 35 | 84
+      (driver|motorcyclist|pedestrian|bicyclist|cyclist)
+    Description: words for victim that are more likely to show up in a crash related title
     Groups:
-      - Age
+      - Victim
+  AmbiguousVictim:
+    Expression: |
+      (man|woman|victim)
+    Description: more generic words for a victim 
+    Groups:
+      - Victim
 
+VictimState:
+  CertainVictimState:
+    Expression: |
+      (hit|crashed)
+    Description: state of victims that are more likely to pertain to a traffic fatality
+    Groups:
+      - State
+  AmbiguousVictimState:
+    Expression: |
+      (killed|dies|dead|ID'd)
+    Description: state of victims that are more generic
+    Groups:
+      - State
+  WrongVictimState:
+    Expression: |
+      (shot|stabbed)
+    Description: state that does not deal with traffic fatalities
+    Groups:
+      - State
+  
+Crash:
+  AnyCrash:
+    Expression: |
+      (crash|accident|hit-and-run|hit-n-run|hit and run|rollover|wreck|collision)
+    Description: words that mean crash
+    Groups:
+      - Crash
+
+Vehicle:
+  AnyVehicle:
+    Expression: |
+      (car|vehicle|truck|bike|motorcycle|bicycle|bus|caltrain|train|bart)
+    Description: words that mean vehicle
+    Groups:
+      - Vehicle
+  
+CrashAdjective:
+  CertainCrashAdjective:
+    Expression: |
+      (rollover)
+    Description: 
+    Groups:
+      - CrashAdjective
+  AmbiguousCrashAdjective:
+    Expression: |
+      (deadly|fatal)
+    Description:
+    Groups:
+      - CrashAdjective
+      
