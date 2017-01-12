@@ -3,6 +3,7 @@ import sys
 from deathmap import db, app
 from deathdb import Article, FeedMarker
 from twitterfeed import TwitterFeed, TwitterPost
+from autoparser.reparse.title import parse_title
 
 TWITTER_ACCOUNTS = ["mercnews", "sfgate", "eastbaytimes", "scsentinel"]
 DEBUG = False
@@ -26,9 +27,9 @@ with app.app_context():
     posts = reversed(feed.get_posts())  # add oldest posts first
     for p in posts:
       if title_matches(p.title):
-        article = Article(p.title, p.link)
+        article = Article(p.title, p.link, get_title_weight(p.title))
         if DEBUG:
-          print "matched article: " + p.title
+          print "matched article: " + p.title + " " + get_title_weight(p.title)
         else:
           db.session.add(article)
 

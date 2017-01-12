@@ -136,9 +136,10 @@ class ArticleDecoder(Flask.json_decoder):
     # check for required fields
     if obj is None \
         or len(obj.get("title", "")) == 0 \
-        or len(obj.get("link", "")) == 0:
+        or len(obj.get("link", "")) == 0 \
+        or len(obj.get("weight", 0)) == None:
       return None
-    return Article(obj["title"], obj["link"])
+    return Article(obj["title"], obj["link"], obj["weight"])
   
 class Crash(db.Model):
   __tablename__ = "crashes"
@@ -322,16 +323,18 @@ class Article(db.Model):
   id = db.Column(db.Integer, primary_key=True)
   title = db.Column(db.String(256))
   link = db.Column(db.String(512))  # TODO: use Link
+  weight = db.Columnt(db.Integer)
 
-  def __init__(self, title, link):
+  def __init__(self, title, link, weight=0):
     if title is None or link is None \
         or len(title) == 0 or len(link) == 0:
       raise ValueError("Wrong parameter for Article.")
     self.title = title
     self.link = link
+    self.weight = weight
 
   def __repr__(self):
-    return "<Article %s %s>" % (self.title, self.link)
+    return "<Article %s %s %d>" % (self.title, self.link, self.weight)
 
   def __eq__(self, other):
     if self.title != other.title:
