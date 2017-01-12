@@ -11,6 +11,9 @@ oauthlib==2.0.1
 psycopg2==2.6.1
 python-dateutil==2.4.2
 python-twitter==3.2
+PyYAML==3.12
+regex==2016.12.27
+reparse==3.0
 requests==2.12.3
 requests-oauthlib==0.7.0
 six==1.9.0
