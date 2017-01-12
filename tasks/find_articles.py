@@ -3,7 +3,7 @@ import sys
 from deathmap import db, app
 from deathdb import Article, FeedMarker
 from twitterfeed import TwitterFeed, TwitterPost
-from autoparser.reparse.title import parse_title
+from autoparser.reparse.title import get_title_weight
 
 TWITTER_ACCOUNTS = ["mercnews", "sfgate", "eastbaytimes", "scsentinel"]
 DEBUG = False
