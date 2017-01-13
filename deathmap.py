@@ -7,7 +7,8 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from deathdb import db, CrashEncoder, CrashDecoder, Crash, Victim, Link, Tag, User, CreatedBy
 from deathdb import UserDecoder, Article, ArticleDecoder
 from functools import wraps
-from rq import Queue, Job
+from rq import Queue
+from rq.job import Job
 from deathworker import rq_connection
 from autoparser.article import get_article_body
 import datetime
