@@ -39,7 +39,7 @@ $(document).ready(function () {
   $(".load-article-btn:button").click(function() {
     var id = $(this).data("article");
     load_article(id, function(body) {
-      $("#article-modal-body").text(body);
+      $("#article-modal-body").text(body["result"].join(" "));
       $("#article-modal").modal();
     });
   });
