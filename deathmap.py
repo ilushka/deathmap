@@ -225,9 +225,9 @@ def job_read(job_key=None):
     print "job key: " + job_key
     job = Job.fetch(job_key, connection=rq_connection)
     if job.is_finished:
-      return str(job.result), 200
+      return jsonify({'status': 'is_finished', 'result': job.result}), 200
     else:
-      return "Not ready", 202
+      return jsonify({'status': 'is_not_finished'}), 202
 
 @app.route("/article/<article_id>/", methods=["GET"])
 @login_required
