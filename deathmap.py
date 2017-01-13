@@ -7,6 +7,9 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from deathdb import db, CrashEncoder, CrashDecoder, Crash, Victim, Link, Tag, User, CreatedBy
 from deathdb import UserDecoder, Article, ArticleDecoder
 from functools import wraps
+from rq import Queue, Job
+from deathworker import rq_connection
+from autoparser.article import get_article_body
 import datetime
 import os
 
@@ -70,6 +73,7 @@ login_manager.init_app(app)
 login_manager.login_view = "login"
 Bower(app)
 db.init_app(app)
+rq_queue = Queue(connection=rq_connection)
 
 # NOTE: How to add functions to templates:
 #
@@ -209,6 +213,42 @@ def logout():
     flash("Logged out.")
     return redirect(url_for("login"))
 
+@app.route("/job/<job_key>/", methods=["GET"])
+@login_required
+def article_read(job_key=None):
+  if job_key is None:
+    print "Missing job ID"
+    abort(400)
+
+  else:
+    job = Job.fetch(job_key, connection=rq_connection)
+    if job.is_finished:
+      return str(job.result), 200
+    else:
+      return "Not ready", 202
+
+@app.route("/article/<article_id>/", methods=["GET"])
+@login_required
+def article_read(article_id=None):
+  if article_id is None:
+    print "Missing article ID"
+    abort(400)
+
+  elif str(article_id) == "all":
+    # return all articles
+    articles = Article.query.order_by(Article.id)
+    return render_template("article_list.html", articles=articles)
+
+  else:
+    try:
+      article = db.session.query(Article).get(int(article_id));
+    except ValueError:
+      article = None
+    if article is None:
+      abort(400)
+    job = rq_queue.enqueue(get_article_body, article.link)
+    return jsonify({'job_key': job.get_id()})
+
 @app.route("/article/<article_id>/", methods=["POST"])
 @login_required
 def article_edit(article_id=None):
@@ -224,13 +264,6 @@ def article_edit(article_id=None):
     db.session.commit()
 
   return jsonify({})
-
-@app.route("/articles/", methods=["GET"])
-@login_required
-def articles():
-  # return all articles
-  articles = Article.query.order_by(Article.id)
-  return render_template("article_list.html", articles=articles)
 
 if __name__ == "__main__":
   app.run()
