@@ -8,6 +8,7 @@
     <table class="table table-striped">
       <thead>
         <tr>
+          <th>id</th>
           <th>Title</th>
           <th>Link</th>
           <th>Weight</th>
@@ -17,6 +18,7 @@
       <tbody id="list-tbody">
         {% for a in articles %}
           <tr>
+            <td>{{ a.id }}</td>
             <td>{{ a.title }}</td>
             <td><a href="{{a.link}}" target="_blank">{{ a.link }}</a></td>
             <td class={{"threshold_reached" if a.weight >= 15 else "threshold_unreached"}}>{{a.weight}}</td>
