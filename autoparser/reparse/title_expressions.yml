@@ -1,7 +1,7 @@
 Victim:
   CertainVictim:
     Expression: |
-      (driver|motorcyclist|pedestrian|bicyclist|cyclist)
+      (driver|motorcyclist|pedestrian|bicyclist|cyclist|motorist)
     Description: words for victim that are more likely to show up in a crash related title
     Groups:
       - Victim
