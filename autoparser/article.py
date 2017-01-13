@@ -18,7 +18,7 @@ def _get_children_text(root, parent_xpath):
     # if p.text is not None and _count_words(p.text) > 1:
     if p.text is not None:
       text.append(p.text)
-  return None if len(text) > 0 else text
+  return text if len(text) > 0 else None
   
 def get_article_body(url):
   parsed = parse(url)
