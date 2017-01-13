@@ -10,5 +10,27 @@ $(document).ready(function () {
       alert("Failed to delete article " + id);
     });
   });
+
+  // job polling
+  var poll_job = function(key) {
+    $.get("/job/" + key + "/", function(data) {
+      alert("MONKEY: " + data);
+    })
+    .fail(function() {
+      alert("Failed to get job status " + key);
+    });
+  };
+
+  // setup article body load function
+  $("#article_moda/").on("shown.bs.modal", function() {
+    var id = $(this).attr("article");
+    $.get("/article/" + id + "/", function(data) {
+      var json = $.parseJSON(data);
+      poll_job(json['job_key']);
+    })
+    .fail(function() {
+      alert("Failed to load article " + id);
+    });
+  });
 });
 
