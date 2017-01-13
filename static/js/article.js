@@ -1,7 +1,7 @@
 $(document).ready(function () {
   // setup article delete button function
   $(".del-article-btn:button").click(function() {
-    var id = $(this).attr("article"),
+    var id = $(this).data("article"),
         row = $(this).parent().parent();
     $.post("/article/" + id + "/", function() {
       row.remove();
