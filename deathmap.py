@@ -216,7 +216,7 @@ def logout():
 
 @app.route("/job/<job_key>/", methods=["GET"])
 @login_required
-def article_read(job_key=None):
+def job_read(job_key=None):
   if job_key is None:
     print "Missing job ID"
     abort(400)
