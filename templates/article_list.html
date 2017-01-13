@@ -23,8 +23,9 @@
             <td><a href="{{a.link}}" target="_blank">{{ a.link }}</a></td>
             <td class={{"threshold_reached" if a.weight >= 15 else "threshold_unreached"}}>{{a.weight}}</td>
             <td>
+              <!-- TODO: replace non-standard attributes with data-* -->
               <button type="button" class="btn btn-danger btn-xs del-article-btn" article="{{ a.id }}">del</button>
-              <button type="button" class="btn btn-success btn-xs load-article-btn" article="{{ a.id }}" data-toggle="modal" data-target="#article_modal">load</button>
+              <button type="button" class="btn btn-success btn-xs load-article-btn" data-article="{{ a.id }}">load</button>
             </td>
           </tr>
         {% endfor %}

@@ -12,24 +12,36 @@ $(document).ready(function () {
   });
 
   // job polling
-  var poll_job = function(key) {
+  var poll_job = function(key, completion) {
     $.get("/job/" + key + "/", function(data) {
-      alert("MONKEY: " + data);
+      var json = $.parseJSON(data);
+      if (json["status"] == "is_finished") {
+        completion(json);
+      } else {
+        setTimeout(function() { poll_job(key, completion); }, 2000);
+      }
     })
     .fail(function() {
       alert("Failed to get job status " + key);
     });
   };
 
-  // setup article body load function
-  $("#article_modal").on("shown.bs.modal", function() {
-    var id = $(this).attr("article");
+  // load article
+  var load_article = function(id, completion) {
     $.get("/article/" + id + "/", function(data) {
       var json = $.parseJSON(data);
-      poll_job(json['job_key']);
+      poll_job(json["job_key"], completion);
     })
     .fail(function() {
       alert("Failed to load article " + id);
+    });
+  };
+
+  // setup article load button function
+  $(".load-article-btn:button").click(function() {
+    var id = $(this).data("article");
+    load_article(id, function() {
+      $("#article_modal").modal();
     });
   });
 });
