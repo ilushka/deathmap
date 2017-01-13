@@ -13,8 +13,7 @@ $(document).ready(function () {
 
   // job polling
   var poll_job = function(key, completion) {
-    $.get("/job/" + key + "/", function(data) {
-      var json = $.parseJSON(data);
+    $.get("/job/" + key + "/", function(json) {
       if (json["status"] == "is_finished") {
         completion(json);
       } else {
@@ -28,8 +27,7 @@ $(document).ready(function () {
 
   // load article
   var load_article = function(id, completion) {
-    $.get("/article/" + id + "/", function(data) {
-      var json = $.parseJSON(data);
+    $.get("/article/" + id + "/", function(json) {
       poll_job(json["job_key"], completion);
     })
     .fail(function() {
