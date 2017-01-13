@@ -15,8 +15,7 @@ def _count_words(s):
 def _get_children_text(root, parent_xpath):
   text = list()
   for p in root.xpath(parent_xpath + '//p'):
-    # if p.text is not None and _count_words(p.text) > 1:
-    if p.text is not None:
+    if p.text is not None and _count_words(p.text) > 1:
       text.append(p.text)
   return text if len(text) > 0 else None
   
