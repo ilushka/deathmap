@@ -222,6 +222,7 @@ def job_read(job_key=None):
     abort(400)
 
   else:
+    print "job key: " + job_key
     job = Job.fetch(job_key, connection=rq_connection)
     if job.is_finished:
       return str(job.result), 200
