@@ -22,7 +22,7 @@ $(document).ready(function () {
   };
 
   // setup article body load function
-  $("#article_moda/").on("shown.bs.modal", function() {
+  $("#article_modal").on("shown.bs.modal", function() {
     var id = $(this).attr("article");
     $.get("/article/" + id + "/", function(data) {
       var json = $.parseJSON(data);
