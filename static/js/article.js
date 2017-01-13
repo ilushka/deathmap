@@ -38,8 +38,9 @@ $(document).ready(function () {
   // setup article load button function
   $(".load-article-btn:button").click(function() {
     var id = $(this).data("article");
-    load_article(id, function() {
-      $("#article_modal").modal();
+    load_article(id, function(body) {
+      $("#article-modal-body").text(body);
+      $("#article-modal").modal();
     });
   });
 });
