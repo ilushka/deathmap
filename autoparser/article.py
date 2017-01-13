@@ -38,5 +38,7 @@ def get_article_body(url):
   pop_xpath = _find_popular_xpath(p_counts)
   print "most popular xpath: " + str(pop_xpath)
 
-  return _get_children_text(doc, pop_xpath[0])
+  body = _get_children_text(doc, pop_xpath[0])
+  print "article body: " + str(body)
+  return body
 
