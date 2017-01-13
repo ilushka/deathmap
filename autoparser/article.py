@@ -33,7 +33,7 @@ def get_article_body(url):
       p_counts[parent_path] += 1
     else:
       p_counts[parent_path] = 1
-    print "parent path: " parent_path + ", " + p_counts[parent_path]
+    print "parent path: " + parent_path + ", " + p_counts[parent_path]
 
   pop_xpath = _find_popular_xpath(p_count)
   print "most popular xpath: " + str(pop_xpath)
